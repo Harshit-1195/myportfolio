@@ -1,64 +1,42 @@
 export const blogPosts = [
   {
     id: "1",
+    slug: "streamline-your-ppc-with-meta-google-automation",
     title: "Streamline Your PPC with Meta & Google Automation",
     excerpt:
       "Managing large pay-per-click (PPC) campaigns across platforms like Google Ads and Meta can be complex and time-consuming. Automating repetitive tasks through scripts and functions is key to simplifying optimization and boosting performance.",
-    content: `
-      <h1>Streamline Your PPC with Meta & Google Automation</h1>
-      
-      <p>Managing large pay-per-click (PPC) campaigns across platforms like Google Ads and Meta can be complex and time-consuming. Automating repetitive tasks through scripts and functions is key to simplifying optimization and boosting performance.</p>
-      
-      <h2>Why Automate Your PPC Campaigns?</h2>
-      
-      <p>Automation brings several benefits:</p>
-      
-      <ul>
-        <li><strong>Saves time</strong> - Automate tedious manual tasks like updating bids, pausing ads, applying labels, etc. Free up time for high-level strategy.</li>
-        <li><strong>Increased efficiency</strong> - Functions run 24/7 to apply optimizations instantly. No reliance on manual work.</li>
-        <li><strong>Reduces errors</strong> - Minimizes mistakes that happen with manual account management.</li>
-        <li><strong>Improves optimization</strong> - Rules and triggers can automatically adjust campaigns based on real-time data.</li>
-        <li><strong>Provides insights</strong> - Automated reporting and tracking uncovers hidden patterns and opportunities.</li>
-      </ul>
-      
-      <h2>Automation in Google Ads with Scripts</h2>
-      
-      <p>Google Ads provides a scripts engine to build and deploy JavaScript code directly in accounts. Scripts allow advanced automation like:</p>
-      
-      <ul>
-        <li>Auto-pausing poor performing keywords</li>
-        <li>Updating bid strategies based on day of week and time</li>
-        <li>Moving ads between campaigns based on status</li>
-        <li>Grabbing conversion data and outputting into spreadsheets</li>
-        <li>Pacing daily budgets evenly over the month</li>
-      </ul>
-      
-      <p>Scripting provides limitless optimization capabilities for Google Ads accounts of any size.</p>
-      
-      <h2>Function Automation in Meta Ads</h2>
-      
-      <p>The Meta Business Suite API enables creating custom functions to automate optimization tasks:</p>
-      
-      <ul>
-        <li>Budget pacing functions distribute spend evenly</li>
-        <li>Auto rules check for underperforming creative and pause ads</li>
-        <li>Lookalike audience scripts find new potential customer segments</li>
-        <li>Relevant triggers like time of day, conversion drops, high CPMs, etc.</li>
-      </ul>
-      
-      <p>Functions increase efficiency and provide ongoing optimization 24/7.</p>
-      
-      <p>Automation is imperative to streamline and enhance PPC campaigns in today's digital landscape. Leveraging functions and scripts unlocks new opportunities through informed optimization and advanced workflows. The result is greater efficiency, insights, and ultimately, ROI.</p>
-    `,
     image: "/digital-advertising-technology.png",
     date: "Jan 18, 2024",
     author: "Harshit Dabhi",
     category: "PPC",
     readTime: "1 min read",
-    tags: ["PPC", "Automation", "Google Ads", "Meta Ads", "Digital Marketing"],
+    content: `<h1>Streamline Your PPC with Meta & Google Automation</h1>
+      <p>Managing large pay-per-click (PPC) campaigns across platforms like Google Ads and Meta can be complex and time-consuming. Automating repetitive tasks through scripts and functions is key to simplifying optimization and boosting performance.</p>
+      <p>In this article, we'll explore how automation can transform your PPC campaigns, saving you time while improving results.</p>
+      <h2>The Power of Automation in PPC</h2>
+      <p>Automation in PPC allows marketers to focus on strategy rather than manual tasks. By leveraging machine learning and AI, you can optimize bids, adjust budgets, and pause underperforming ads automatically.</p>
+      <h2>Google Ads Automation</h2>
+      <p>Google Ads offers several automation features:</p>
+      <ul>
+        <li>Smart Bidding strategies that optimize for conversions or conversion value</li>
+        <li>Responsive Search Ads that automatically test different combinations of headlines and descriptions</li>
+        <li>Google Ads scripts for custom automation solutions</li>
+      </ul>
+      <h2>Meta Ads Automation</h2>
+      <p>Meta's automation tools include:</p>
+      <ul>
+        <li>Campaign Budget Optimization to distribute budget across ad sets</li>
+        <li>Automated Rules to control when ads run based on performance</li>
+        <li>Dynamic Creative to test different creative elements</li>
+      </ul>
+      <h2>Cross-Platform Automation</h2>
+      <p>For businesses running campaigns across multiple platforms, third-party tools can provide unified automation capabilities, allowing for consistent optimization across your entire digital advertising ecosystem.</p>
+      <h2>Getting Started with PPC Automation</h2>
+      <p>Begin by identifying repetitive tasks in your workflow, then explore automation options that can handle these tasks. Start small, test thoroughly, and gradually expand your automation strategy as you gain confidence in the results.</p>`,
   },
   {
     id: "2",
+    slug: "the-ai-revolution-how-emerging-tools-are-disrupting-the-digital-ecosystem",
     title: "The AI Revolution: How Emerging Tools are Disrupting the Digital Ecosystem",
     excerpt:
       "Artificial intelligence (AI) is rapidly transforming the digital ecosystem and changing the way businesses operate. From improving customer experiences to increasing operational efficiency, AI is disrupting every industry and creating new opportunities for growth.",
@@ -110,6 +88,7 @@ export const blogPosts = [
   },
   {
     id: "3",
+    slug: "the-rise-of-chatgpt-from-ai-model-to-overnight-sensation",
     title: "The Rise of ChatGPT: From AI Model to Overnight Sensation",
     excerpt:
       "ChatGPT, an artificial intelligence language model developed by OpenAI, has recently taken the internet by storm. From social media to news outlets, people can't stop talking about this impressive AI technology.",
@@ -150,6 +129,7 @@ export const blogPosts = [
   // Continue with the rest of the blog posts...
   {
     id: "4",
+    slug: "the-future-of-marketing-is-in-the-metaverse-how-brands-can-engage-in-virtual-reality",
     title: "The Future of Marketing is in the Metaverse: How Brands Can Engage in Virtual Reality",
     excerpt:
       "The metaverse is a virtual world where users can interact with each other and with virtual objects and experiences. Marketing in the metaverse can take many forms, depending on the specific platform and the goals of the marketing campaign.",

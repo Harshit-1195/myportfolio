@@ -25,7 +25,7 @@ export default function ResumePage() {
   const [expandedExperience, setExpandedExperience] = useState<number | null>(0)
   const [expandedEntrepreneurial, setExpandedEntrepreneurial] = useState<number | null>(0)
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate | null>(null)
-  const [showAllCertificates, setShowAllCertificates] = useState(false);
+  const [showAllCertificates, setShowAllCertificates] = useState(false)
 
   const toggleExperience = (id: number) => {
     setExpandedExperience(expandedExperience === id ? null : id)
@@ -194,7 +194,7 @@ export default function ResumePage() {
         "Market Research",
         "Social Media Marketing",
         "Google Ads",
-        "Data Analysis"
+        "Data Analysis",
       ],
       logo: "/cannes-lions-logo.png",
     },
@@ -210,7 +210,7 @@ export default function ResumePage() {
         "Brand Awareness",
         "Digital Marketing",
         "Pay Per Click (PPC)",
-        "Social Media Marketing"
+        "Social Media Marketing",
       ],
       logo: "/tiktok-logo.png",
     },
@@ -226,7 +226,7 @@ export default function ResumePage() {
         "Advertising",
         "Brand Awareness",
         "Digital Marketing",
-        "Content Marketing"
+        "Content Marketing",
       ],
       logo: "/hubspot-logo.png",
     },
@@ -242,7 +242,7 @@ export default function ResumePage() {
         "Brand Awareness",
         "Digital Marketing",
         "Content Marketing",
-        "Search Engine Optimization (SEO)"
+        "Search Engine Optimization (SEO)",
       ],
       logo: "/hubspot-logo.png",
     },
@@ -255,7 +255,7 @@ export default function ResumePage() {
         "Digital Marketing",
         "Google Analytics",
         "Search Engine Optimization (SEO)",
-        "Data Analysis"
+        "Data Analysis",
       ],
       logo: "/google-logo.png",
     },
@@ -264,12 +264,7 @@ export default function ResumePage() {
       name: "Sport Event Management",
       organization: "International Olympic Committee – IOC",
       issuedDate: "Dec 2021",
-      skills: [
-        "Marketing Communications",
-        "Team Management",
-        "Advertising",
-        "Problem Solving"
-      ],
+      skills: ["Marketing Communications", "Team Management", "Advertising", "Problem Solving"],
       logo: "/olympic-rings.png",
     },
     {
@@ -287,7 +282,7 @@ export default function ResumePage() {
         "Content Marketing",
         "Social Media Marketing",
         "Communication",
-        "Search Engine Optimization (SEO)"
+        "Search Engine Optimization (SEO)",
       ],
       logo: "/olympic-rings.png",
     },
@@ -301,7 +296,7 @@ export default function ResumePage() {
         "Marketing Communications",
         "Communication",
         "Problem Solving",
-        "Digital Marketing"
+        "Digital Marketing",
       ],
       logo: "/olympic-rings.png",
     },
@@ -315,7 +310,7 @@ export default function ResumePage() {
         "Google Analytics",
         "Research",
         "Market Research",
-        "Data Analysis"
+        "Data Analysis",
       ],
       logo: "/google-logo.png",
     },
@@ -330,7 +325,7 @@ export default function ResumePage() {
         "Digital Marketing",
         "Research",
         "Content Marketing",
-        "Performance Marketing"
+        "Performance Marketing",
       ],
       logo: "/google-logo.png",
     },
@@ -347,7 +342,7 @@ export default function ResumePage() {
         "Content Marketing",
         "Growth Strategies",
         "Performance Marketing",
-        "Communication"
+        "Communication",
       ],
       logo: "/cannes-lions-logo.png",
     },
@@ -363,7 +358,7 @@ export default function ResumePage() {
         "Content Marketing",
         "Professional Communication",
         "Market Research",
-        "Communication"
+        "Communication",
       ],
       logo: "/placeholder-qjxa2.png",
     },
@@ -395,7 +390,7 @@ export default function ResumePage() {
         "Performance Marketing",
         "Social Media Marketing",
         "Google Ads",
-        "Search Engine Optimization (SEO)"
+        "Search Engine Optimization (SEO)",
       ],
       logo: "/cannes-lions-logo.png",
     },
@@ -422,7 +417,7 @@ export default function ResumePage() {
         "Performance Marketing",
         "Market Research",
         "Social Media Marketing",
-        "Google Ads"
+        "Google Ads",
       ],
       logo: "/warc-logo.png",
     },
@@ -438,7 +433,7 @@ export default function ResumePage() {
         "Research",
         "Professional Communication",
         "Market Research",
-        "Communication"
+        "Communication",
       ],
       logo: "/alison-logo.png",
     },
@@ -457,7 +452,7 @@ export default function ResumePage() {
         "Digital Marketing",
         "Content Marketing",
         "Social Media Marketing",
-        "Google Ads"
+        "Google Ads",
       ],
       logo: "/accenture-logo.png",
     },
@@ -472,7 +467,7 @@ export default function ResumePage() {
         "Content Marketing",
         "Social Media Marketing",
         "Google Ads",
-        "Data Analysis"
+        "Data Analysis",
       ],
       logo: "/accenture-logo.png",
     },
@@ -487,7 +482,7 @@ export default function ResumePage() {
         "Digital Marketing",
         "Social Media Marketing",
         "Google Ads",
-        "Search Engine Optimization (SEO)"
+        "Search Engine Optimization (SEO)",
       ],
       logo: "/google-logo.png",
     },
@@ -505,7 +500,7 @@ export default function ResumePage() {
         "Content Marketing",
         "Professional Communication",
         "Leadership",
-        "Business Decision Making"
+        "Business Decision Making",
       ],
       logo: "/invest-india-logo.png",
     },
@@ -530,7 +525,7 @@ export default function ResumePage() {
         "Digital Marketing",
         "Content Marketing",
         "Social Media Marketing",
-        "Google Ads"
+        "Google Ads",
       ],
       logo: "/marketing-nerdz-logo.png",
     },
@@ -544,7 +539,7 @@ export default function ResumePage() {
         "Content Marketing",
         "Communication",
         "Leadership",
-        "Business Decision Making"
+        "Business Decision Making",
       ],
       logo: "/saylor-academy-logo.png",
     },
@@ -882,7 +877,7 @@ export default function ResumePage() {
 
           <div className="mb-10">
             <h3 className="text-2xl font-bold mb-6 text-white">Professional Experience</h3>
-            
+
             <div className="space-y-4">
               {experiences.map((exp, index) => (
                 <div key={exp.id} className="timeline-content">
@@ -1055,7 +1050,9 @@ export default function ResumePage() {
                           Issued {cert.issuedDate}
                           {cert.expiryDate ? ` · Expires ${cert.expiryDate}` : ""}
                         </p>
-                        {cert.credentialId && <p className="text-xs text-gray-400">Credential ID {cert.credentialId}</p>}
+                        {cert.credentialId && (
+                          <p className="text-xs text-gray-400">Credential ID {cert.credentialId}</p>
+                        )}
                       </div>
 
                       <button
@@ -1099,6 +1096,7 @@ export default function ResumePage() {
                 </div>
               )}
             </motion.div>
+          </div>
 
           <div className="mb-10">
             <h3 className="text-2xl font-bold mb-6 text-white">Technical Skills</h3>
@@ -1286,7 +1284,10 @@ export default function ResumePage() {
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {selectedCertificate.skills.map((skill, idx) => (
-                          <span key={idx} className="px-3 py-1 bg-blue-900/50 text-blue-300 rounded-full border border-blue-800">
+                          <span
+                            key={idx}
+                            className="px-3 py-1 bg-blue-900/50 text-blue-300 rounded-full border border-blue-800"
+                          >
                             {skill}
                           </span>
                         ))}
@@ -1366,13 +1367,15 @@ export default function ResumePage() {
                             Issued {cert.issuedDate}
                             {cert.expiryDate ? ` · Expires ${cert.expiryDate}` : ""}
                           </p>
-                          {cert.credentialId && <p className="text-xs text-gray-400">Credential ID {cert.credentialId}</p>}
+                          {cert.credentialId && (
+                            <p className="text-xs text-gray-400">Credential ID {cert.credentialId}</p>
+                          )}
                         </div>
 
                         <button
                           onClick={() => {
-                            setSelectedCertificate(cert);
-                            setShowAllCertificates(false);
+                            setSelectedCertificate(cert)
+                            setShowAllCertificates(false)
                           }}
                           className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors mb-4 flex items-center"
                         >

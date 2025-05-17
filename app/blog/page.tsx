@@ -37,6 +37,7 @@ export default function BlogPage() {
   const blogPosts = [
     {
       id: "1",
+      slug: "streamline-your-ppc-with-meta-google-automation", // Added slug field
       title: "Streamline Your PPC with Meta & Google Automation",
       excerpt:
         "Managing large pay-per-click (PPC) campaigns across platforms like Google Ads and Meta can be complex and time-consuming. Automating repetitive tasks through scripts and functions is key to simplifying optimization and boosting performance.",
@@ -48,6 +49,7 @@ export default function BlogPage() {
     },
     {
       id: "2",
+      slug: "ai-revolution-disrupting-digital-ecosystem", // Added slug field
       title: "The AI Revolution: How Emerging Tools are Disrupting the Digital Ecosystem",
       excerpt:
         "Artificial intelligence (AI) is rapidly transforming the digital ecosystem and changing the way businesses operate. From improving customer experiences to increasing operational efficiency, AI is disrupting every industry and creating new opportunities for growth.",
@@ -59,6 +61,7 @@ export default function BlogPage() {
     },
     {
       id: "3",
+      slug: "the-rise-of-chatgpt-from-ai-model-to-overnight-sensation",
       title: "The Rise of ChatGPT: From AI Model to Overnight Sensation",
       excerpt:
         "ChatGPT, an artificial intelligence language model developed by OpenAI, has recently taken the internet by storm. From social media to news outlets, people can't stop talking about this impressive AI technology.",
@@ -70,6 +73,7 @@ export default function BlogPage() {
     },
     {
       id: "4",
+      slug: "the-future-of-marketing-is-in-the-metaverse",
       title: "The Future of Marketing is in the Metaverse: How Brands Can Engage in Virtual Reality",
       excerpt:
         "The metaverse is a virtual world where users can interact with each other and with virtual objects and experiences. Marketing in the metaverse can take many forms, depending on the specific platform and the goals of the marketing campaign.",
@@ -81,6 +85,7 @@ export default function BlogPage() {
     },
     {
       id: "5",
+      slug: "is-your-brand-ready-for-the-next-era-of-the-web-web3",
       title: "Is Your Brand Ready for the Next Era of the Web? WEB3.0",
       excerpt:
         "The evolution of the internet has been fascinating. From its early days of web 1.0, where it was simply a broadcast of information, to web 2.0 where we saw the rise of social media and two-way communication, we've come a long way.",
@@ -92,6 +97,7 @@ export default function BlogPage() {
     },
     {
       id: "6",
+      slug: "where-user-experience-meets-customer-experience",
       title: "Where User Experience Meets Customer Experience: The Perfect Blend for Business Success",
       excerpt:
         "The realm of User Experience (UX) is just one aspect of the broader concept of Customer Experience (CX). UX refers to the experience a customer has with digital products and services, which can be measured by metrics such as bounce rate.",
@@ -103,6 +109,7 @@ export default function BlogPage() {
     },
     {
       id: "7",
+      slug: "the-advertising-bible-6-timeless-tips-from-david-ogilvy",
       title: "The Advertising Bible: 6 Timeless Tips from David Ogilvy, the King of Copywriting",
       excerpt:
         "David Ogilvy is a legendary figure in the advertising world, and his 1982 manifesto 'How to create advertising that sells' is still relevant today. Here are six of his top tips that you can use to create effective advertising.",
@@ -114,6 +121,7 @@ export default function BlogPage() {
     },
     {
       id: "8",
+      slug: "unlocking-the-secrets-of-successful-entrepreneurs",
       title: "Unlocking the Secrets of Successful Entrepreneurs: Lessons From the Best in Business",
       excerpt:
         "Marketing has been a vital tool for businesses to create brand awareness, drive sales, and achieve growth. Here are eight timeless marketing lessons from some of the most iconic brands in history.",
@@ -125,6 +133,7 @@ export default function BlogPage() {
     },
     {
       id: "9",
+      slug: "apples-winning-strategy-the-rise-of-ar",
       title: "Apple's Winning Strategy: The Rise of AR and the Power of Ecosystem Expansion",
       excerpt:
         "Apple's market capitalization has grown from $1 trillion to $3 trillion since August 2018. Despite delivering remarkable results, Tim Cook's product strategy often remains misunderstood.",
@@ -136,6 +145,7 @@ export default function BlogPage() {
     },
     {
       id: "10",
+      slug: "unlocking-the-secrets-5-keys-to-creating-a-cult-like-brand",
       title: "Unlocking the Secrets: 5 Keys to Creating a Cult-Like Brand",
       excerpt:
         "Nike, Tesla, Apple, and Harley Davidson all share a unique trait - they have a cult-like following. These brands have left their competitors behind and have created an enviable fan base.",
@@ -147,6 +157,7 @@ export default function BlogPage() {
     },
     {
       id: "11",
+      slug: "boost-your-roi-with-these-7-easy-site-optimization-hacks",
       title: "Boost Your ROI with These 7 Easy Site Optimization Hacks",
       excerpt:
         "Small changes to your website can have a significant impact on your return on investment (ROI). Eye-tracking studies show how users scan web pages, and optimizing for this can increase conversion rates.",
@@ -158,6 +169,7 @@ export default function BlogPage() {
     },
     {
       id: "12",
+      slug: "7-game-changing-tips-to-master-business-writing",
       title: "7 Game-Changing Tips to Master Business Writing and Sell Anything to Anyone",
       excerpt:
         "Business writing is an essential aspect of any successful company. With copywriting, you can sell water to a fish. Here are seven tips to help you win at business writing.",
@@ -169,6 +181,7 @@ export default function BlogPage() {
     },
     {
       id: "13",
+      slug: "10-tips-to-transform-your-landing-page-from-bland-to-grand",
       title: "10 Tips to Transform Your Landing Page From Bland to Grand",
       excerpt:
         "Your landing page is like the bouncer at a crowded club - it can either let people in and get the party started or turn them away, killing the vibe before it even begins.",
@@ -180,6 +193,7 @@ export default function BlogPage() {
     },
     {
       id: "14",
+      slug: "free-the-four-letter-word-that-makes-us-lose-our-minds",
       title: "Free: The Four-Letter Word That Makes Us Lose Our Minds (and Wallets)",
       excerpt:
         "Picture this: you're strolling through the supermarket, and the sweet smell of freshly baked cookies hits your nostrils. Your inner cookie monster is unleashed, and you head straight for the cookie stand.",
@@ -191,6 +205,7 @@ export default function BlogPage() {
     },
     {
       id: "15",
+      slug: "unlocking-growth-6-key-user-behaviors-you-need-to-know",
       title: "Unlocking Growth: 6 Key User Behaviors You Need to Know",
       excerpt:
         "In the competitive world of business, driving growth requires more than just a great product or service. It takes a deep understanding of user behavior and the ability to leverage it effectively.",
@@ -202,6 +217,7 @@ export default function BlogPage() {
     },
     {
       id: "16",
+      slug: "apples-visual-cheat-code-the-power-of-compelling-copy",
       title: "Apple's Visual Cheat Code: The Power of Compelling Copy and Complementing Imagery",
       excerpt:
         "The power of compelling copy and complementary visuals cannot be overstated when it comes to helping consumers understand and visualize your product. And nobody does this better than Apple.",
@@ -213,6 +229,7 @@ export default function BlogPage() {
     },
     {
       id: "17",
+      slug: "balancing-innovation-and-privacy-navigating-the-tension",
       title: "Balancing Innovation and Privacy: Navigating the Tension in the Digital Economy",
       excerpt:
         "Innovation and digital privacy are two concepts that are becoming increasingly intertwined in our modern digital age. As companies rely more and more on the collection and analysis of large amounts of data.",
@@ -224,6 +241,7 @@ export default function BlogPage() {
     },
     {
       id: "18",
+      slug: "media-consumption-habits-consumer-behavior-insights",
       title: "Media Consumption Habits & Consumer Behavior: Insights into the Impact of Covid-19",
       excerpt:
         "The global coronavirus pandemic has undoubtedly created a challenging business climate, forcing companies to face new and unprecedented obstacles.",
@@ -235,10 +253,11 @@ export default function BlogPage() {
     },
     {
       id: "19",
+      slug: "unleashing-the-power-of-big-data-the-future-trends",
       title: "Unleashing the Power of Big Data: The Future Trends in Digital Communication",
       excerpt:
         "The digital communication landscape is rapidly evolving and with the rise of big data, the potential for understanding and better targeting key audiences is enormous.",
-      image: "/placeholder.svg?height=400&width=600&query=big%20data%20digital%20communication",
+      image: "/big-data-digital-communication.png",
       date: "Feb 20, 2023",
       author: "Harshit Dabhi",
       category: "Big Data",
@@ -246,10 +265,11 @@ export default function BlogPage() {
     },
     {
       id: "20",
+      slug: "unlocking-digital-marketing-success-why-your-organizations-maturity",
       title: "Unlocking Digital Marketing Success: Why Your Organization's Maturity Level Matters",
       excerpt:
         "According to research, digital marketing maturity levels differ significantly among marketing organizations, and so do the results they achieve.",
-      image: "/placeholder.svg?height=400&width=600&query=digital%20marketing%20maturity",
+      image: "/digital-marketing-maturity.png",
       date: "Feb 20, 2023",
       author: "Harshit Dabhi",
       category: "Digital Marketing",
@@ -569,7 +589,7 @@ export default function BlogPage() {
                   <p className="text-white/90 mb-4 line-clamp-3">{post.excerpt}</p>
 
                   <Link
-                    href={`/blog/${post.id}`}
+                    href={`/blog/${post.slug || post.id}`} // Use slug if available, fallback to id
                     className="text-white font-medium flex items-center gap-1 hover:text-white/80"
                   >
                     Read Full Article <ArrowRight className="h-4 w-4" />

@@ -474,3 +474,109 @@ export async function createSampleData() {
     return { success: false, error: error.message }
   }
 }
+
+// Resume and presentation URL functions
+export async function getResumeUrl(): Promise<string | null> {
+  try {
+    const supabase = getSupabaseServerClient()
+
+    // Check if the assets table exists
+    const { error: tableCheckError } = await supabase.from("assets").select("count").limit(1).single()
+
+    // If the table doesn't exist, return null
+    if (tableCheckError && tableCheckError.message.includes("does not exist")) {
+      console.warn("The assets table does not exist yet. Please run the database setup.")
+      return null
+    }
+
+    const { data, error } = await supabase
+      .from("assets")
+      .select("url")
+      .eq("type", "resume")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single()
+
+    if (error) {
+      console.error("Error fetching resume URL:", error)
+      return null
+    }
+
+    return data?.url || null
+  } catch (error) {
+    console.error("Unexpected error fetching resume URL:", error)
+    return null
+  }
+}
+
+export async function getPresentationUrl(): Promise<string | null> {
+  try {
+    const supabase = getSupabaseServerClient()
+
+    // Check if the assets table exists
+    const { error: tableCheckError } = await supabase.from("assets").select("count").limit(1).single()
+
+    // If the table doesn't exist, return null
+    if (tableCheckError && tableCheckError.message.includes("does not exist")) {
+      console.warn("The assets table does not exist yet. Please run the database setup.")
+      return null
+    }
+
+    const { data, error } = await supabase
+      .from("assets")
+      .select("url")
+      .eq("type", "presentation")
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single()
+
+    if (error) {
+      console.error("Error fetching presentation URL:", error)
+      return null
+    }
+
+    return data?.url || null
+  } catch (error) {
+    console.error("Unexpected error fetching presentation URL:", error)
+    return null
+  }
+}
+
+export async function trackAssetDownload(assetId: string, assetType: string): Promise<boolean> {
+  try {
+    const supabase = getSupabaseServerClient()
+
+    // Check if the downloads table exists
+    const { error: tableCheckError } = await supabase.from("downloads").select("count").limit(1).single()
+
+    // If the table doesn't exist, create it
+    if (tableCheckError && tableCheckError.message.includes("does not exist")) {
+      // Create downloads table
+      const { error: createTableError } = await supabase.rpc("create_downloads_table_if_not_exists")
+
+      if (createTableError) {
+        console.error("Error creating downloads table:", createTableError)
+        return false
+      }
+    }
+
+    // Record the download
+    const { error } = await supabase.from("downloads").insert([
+      {
+        asset_id: assetId,
+        asset_type: assetType,
+        downloaded_at: new Date().toISOString(),
+      },
+    ])
+
+    if (error) {
+      console.error("Error tracking asset download:", error)
+      return false
+    }
+
+    return true
+  } catch (error) {
+    console.error("Unexpected error tracking asset download:", error)
+    return false
+  }
+}

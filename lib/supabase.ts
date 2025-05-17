@@ -8,7 +8,7 @@ const SUPABASE_ANON_KEY =
 // Create a singleton for the client-side Supabase client
 let clientSideClient: ReturnType<typeof createClient> | null = null
 
-export function getSupabaseClient() {
+export function getSupabaseBrowserClient() {
   if (clientSideClient) return clientSideClient
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || SUPABASE_URL
@@ -22,6 +22,9 @@ export function getSupabaseClient() {
   clientSideClient = createClient(supabaseUrl, supabaseAnonKey)
   return clientSideClient
 }
+
+// Add alias for backward compatibility
+export const getSupabaseClient = getSupabaseBrowserClient
 
 // Server-side client (uses service role key if available)
 export function getSupabaseServerClient() {
