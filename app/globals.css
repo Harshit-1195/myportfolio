@@ -1,0 +1,539 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add scrollbar styling */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 3px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+/* Hide scrollbar for Firefox */
+.scrollbar-thin {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+/* Hide scrollbar for IE and Edge */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Existing styles */
+:root {
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+  height: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  font-family: var(--font-space-grotesk);
+  /* Add overscroll behavior for smoother mobile scrolling */
+  overscroll-behavior-y: none;
+  text-rendering: optimizeSpeed;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Optimize animations during scrolling */
+.is-scrolling * {
+  animation-play-state: paused !important;
+  transition: none !important;
+}
+
+/* Optimize animations during scrolling */
+body.is-scrolling * {
+  transition-duration: 0ms !important;
+  animation-play-state: paused !important;
+}
+
+.font-signature {
+  font-family: var(--font-dancing-script);
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+.text-gradient {
+  background: linear-gradient(90deg, #fff, #a5a5a5);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-gradient-color {
+  background: linear-gradient(90deg, #00ffcc, #ff00cc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Update the signature-name styling to use the new font */
+.signature-name {
+  font-family: var(--font-playfair);
+  color: white;
+  font-size: 4rem;
+  line-height: 1;
+  position: relative;
+  font-weight: 600;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.05em;
+  display: inline-block;
+  padding-bottom: 0.5em;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.signature-name::after {
+  content: "";
+  position: absolute;
+  bottom: 0.2em;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.8) 20%,
+    rgba(255, 255, 255, 0.8) 80%,
+    transparent
+  );
+}
+
+/* Signature animation */
+@keyframes signature-draw {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.signature-line {
+  position: absolute;
+  bottom: 0.2em;
+  left: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.8) 20%,
+    rgba(255, 255, 255, 0.8) 80%,
+    transparent
+  );
+  width: 0;
+  animation: signature-draw 1.5s ease-out forwards;
+  animation-delay: 1s;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Fixed glow-text class */
+.glow-text {
+  text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.dark .glow-text {
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  contain: layout style paint;
+}
+
+.vertical-text {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.scroll-indicator {
+  position: fixed;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+
+.scroll-indicator-line {
+  width: 1px;
+  height: 60px;
+  @apply dark:bg-gradient-to-b dark:from-white/50 dark:to-transparent
+       bg-gradient-to-b from-black/50 to-transparent;
+  margin: 0 auto;
+}
+
+.scroll-indicator-text {
+  @apply dark:text-white/50 text-black/50;
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* Enhanced hover-lift class */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+/* Enhanced hover-glow classes */
+.hover-glow {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.hover-glow:hover {
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3), 0 0 40px rgba(255, 255, 255, 0.1);
+  transform: translateY(-5px);
+}
+
+.hover-glow-pink {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.hover-glow-pink:hover {
+  box-shadow: 0 0 20px rgba(236, 72, 153, 0.3), 0 0 40px rgba(236, 72, 153, 0.1);
+  transform: translateY(-5px);
+}
+
+.hover-glow-blue {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.hover-glow-blue:hover {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.3), 0 0 40px rgba(59, 130, 246, 0.1);
+  transform: translateY(-5px);
+}
+
+.hover-glow-yellow {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.hover-glow-yellow:hover {
+  box-shadow: 0 0 20px rgba(234, 179, 8, 0.3), 0 0 40px rgba(234, 179, 8, 0.1);
+  transform: translateY(-5px);
+}
+
+/* Timeline styles */
+.timeline-container {
+  @apply relative pl-8 border-l-2 dark:border-white/20 border-white/20;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+.timeline-dot {
+  @apply absolute w-4 h-4 rounded-full dark:bg-white bg-white -left-[9px];
+  background-color: white !important;
+}
+
+.timeline-content {
+  @apply mb-8 relative;
+  contain: layout style paint;
+}
+
+/* Custom timeline styles for resume page */
+.timeline-container-custom {
+  position: relative;
+  padding-left: 2rem;
+  border-left-width: 2px;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.timeline-dot-custom {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  border-radius: 9999px;
+  background-color: white;
+  left: -0.5625rem;
+}
+
+/* Add a new class for the profile image container */
+.profile-image-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  margin: 0 auto;
+  contain: layout style paint;
+}
+
+.profile-image-container img {
+  object-fit: cover;
+}
+
+/* Reveal animation for scroll reveal - optimized for performance */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Optimize scroll reveal for when scrolling */
+body.is-scrolling .scroll-reveal {
+  transition: none !important;
+}
+
+/* Cursor blink animation for animated text */
+.cursor-blink {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  @apply dark:bg-white bg-black;
+  margin-left: 2px;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  from,
+  to {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Resume page specific styles */
+/* Custom classes for specific page styling */
+.resume-page .interactive-particles,
+.blog-page .interactive-particles,
+.podcast-page .interactive-particles {
+  z-index: 0 !important;
+  opacity: 0.4 !important;
+  display: block !important;
+  visibility: visible !important;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Update the interactive-particles class to ensure it's visible on all pages */
+canvas.interactive-particles {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 0 !important; /* Change from -10 to 0 */
+  pointer-events: none !important;
+  opacity: 0.4 !important;
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Add specific styles for problematic pages */
+body:has(.resume-page) canvas.interactive-particles,
+body:has(.blog-page) canvas.interactive-particles,
+body:has(.podcast-page) canvas.interactive-particles {
+  z-index: 0 !important;
+  opacity: 0.4 !important;
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Optimize animations */
+.reduce-motion {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Optimize images for better performance */
+img {
+  content-visibility: auto;
+  image-rendering: auto;
+}
+
+/* Optimize layout shifts */
+.layout-stable {
+  contain: layout;
+}
+
+/* Optimize paint operations */
+.paint-stable {
+  contain: paint;
+}
+
+/* Optimize size calculations */
+.size-stable {
+  contain: size;
+}
+
+/* Optimize all containment */
+.contain-all {
+  contain: strict;
+}
+
+/* Optimize for GPU acceleration */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Optimize for scrolling */
+.scroll-optimized {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Optimize for animations */
+.animation-optimized {
+  will-change: transform, opacity;
+}
+
+/* Collapsible content styles */
+.collapsible-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.collapsible-content.expanded {
+  max-height: 1000px; /* Adjust based on your content */
+}
+
+.collapsible-trigger {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.collapsible-icon {
+  transition: transform 0.3s ease;
+}
+
+.collapsible-icon.rotated {
+  transform: rotate(180deg);
+}
+
+/* Fix for hidden text */
+.text-white\/70 {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.text-white\/80 {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.text-white\/50 {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* Ensure text is visible in dark mode */
+.dark .text-white\/70,
+.dark .text-white\/80,
+.dark .text-white\/50 {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Optimize rendering with hardware acceleration for animations */
+.certificate-carousel,
+.blog-posts-section {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
