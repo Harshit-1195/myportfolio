@@ -8,6 +8,7 @@ import FloatingActionButton from "@/components/floating-action-button"
 import Image from "next/image"
 import PageParticles from "@/components/page-particles"
 import { useState } from "react"
+import { BackToHomeAlt } from "@/components/back-to-home-alt"
 
 type Certificate = {
   name: string
@@ -1409,6 +1410,7 @@ export default function ResumePage() {
         </AnimatePresence>
 
         <FloatingActionButton />
+        <BackToHomeAlt />
       </div>
     </>
   )

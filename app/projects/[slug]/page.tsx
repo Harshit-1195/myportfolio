@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation"
 import Image from "next/image"
-import Link from "next/link"
-import { ArrowLeft } from "lucide-react"
+import { BackToHomeAlt } from "@/components/back-to-home-alt"
 
 // Static projects data
 const projects = [
@@ -105,9 +104,7 @@ export default function ProjectPage({ params }: ProjectPageProps) {
 
   return (
     <div className="container mx-auto py-28 px-4">
-      <Link href="/projects" className="inline-flex items-center text-sm font-medium hover:underline mb-8 text-white">
-        <ArrowLeft className="mr-1 h-4 w-4" /> Back to Projects
-      </Link>
+      <BackToHomeAlt />
 
       <div className="glass-panel p-8 rounded-lg mb-10">
         <div className="relative w-full h-64 md:h-96 mb-8 rounded-lg overflow-hidden">

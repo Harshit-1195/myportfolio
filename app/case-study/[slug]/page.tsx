@@ -7,6 +7,7 @@ import Link from "next/link"
 import { ArrowLeft, Calendar, User, Tag, Award, CheckCircle } from "lucide-react"
 import { ScrollRevealWrapper } from "@/components/scroll-reveal-wrapper"
 import PageParticles from "@/components/page-particles"
+import { BackToHomeAlt } from "@/components/back-to-home-alt"
 
 // Case study data
 const caseStudies = {
@@ -669,11 +670,7 @@ export default function CaseStudyPage() {
       <PageParticles />
       <div className="container mx-auto py-28 px-4">
         {/* Back button */}
-        <Link href="/work">
-          <button className="flex items-center gap-2 text-white/70 hover:text-white mb-8">
-            <ArrowLeft className="h-4 w-4" /> Back to Work
-          </button>
-        </Link>
+        <BackToHomeAlt />
 
         {/* Hero section */}
         <ScrollRevealWrapper>

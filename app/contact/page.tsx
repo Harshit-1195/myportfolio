@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { useState } from "react"
 import { submitContactForm } from "@/lib/actions"
+import { BackToHomeAlt } from "@/components/back-to-home-alt"
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -373,6 +374,7 @@ export default function ContactPage() {
           </div>
         </div>
       </motion.div>
+      <BackToHomeAlt />
     </div>
   )
 }

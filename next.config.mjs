@@ -15,7 +15,8 @@ const nextConfig = {
     unoptimized: true,
   },
   experimental: {
-    optimizeCss: true,
+    // Removing optimizeCss since critters is missing
+    // optimizeCss: true,
     optimizePackageImports: ['framer-motion', 'lucide-react'],
     scrollRestoration: true,
   },

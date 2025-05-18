@@ -11,7 +11,7 @@ import FloatingNavigation from "@/components/floating-navigation"
 // Import the ConsentBanner component
 import ConsentBanner from "@/components/consent-banner"
 // Import the BackToHome component
-import BackToHomeAlt from "@/components/back-to-home-alt"
+import { BackToHomeAlt } from "@/components/back-to-home-alt"
 
 // Lazy load heavy components
 const InteractiveParticles = lazy(() => import("@/components/interactive-particles"))

@@ -9,6 +9,7 @@ import PageParticles from "@/components/page-particles"
 import { useEffect, useState } from "react"
 import { blogPosts } from "@/lib/blog-data"
 import { motion } from "framer-motion"
+import { BackToHomeAlt } from "@/components/back-to-home-alt"
 
 export default function BlogPost() {
   const { slug } = useParams() // Changed from id to slug
@@ -249,6 +250,7 @@ export default function BlogPost() {
               </div>
             </motion.div>
           )}
+          <BackToHomeAlt />
         </ScrollRevealWrapper>
       </div>
     </>
