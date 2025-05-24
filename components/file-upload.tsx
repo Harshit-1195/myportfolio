@@ -4,220 +4,153 @@ import type React from "react"
 
 import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
-import { FileUp, X, Check } from "lucide-react"
-import { uploadFile } from "@/lib/storage"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { uploadFile, createMedia } from "@/lib/cms-service"
+import { Upload, Check, AlertCircle } from "lucide-react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface FileUploadProps {
-  onUploadComplete?: (result: { url: string; path: string }) => void
-  bucket?: string
-  folder?: string
-  accept?: string
-  maxSize?: number // in bytes
-  className?: string
+  onUploadComplete?: (mediaItem: any) => void
 }
 
-export function FileUpload({
-  onUploadComplete,
-  bucket = "assets",
-  folder = "",
-  accept,
-  maxSize = 10 * 1024 * 1024, // 10MB default
-  className = "",
-}: FileUploadProps) {
+export function FileUpload({ onUploadComplete }: FileUploadProps) {
   const [file, setFile] = useState<File | null>(null)
+  const [altText, setAltText] = useState("")
+  const [caption, setCaption] = useState("")
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
-  const [dragActive, setDragActive] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      validateAndSetFile(e.target.files[0])
-    }
-  }
-
-  const validateAndSetFile = (file: File) => {
-    setError(null)
-
-    // Check file size
-    if (file.size > maxSize) {
-      setError(`File is too large. Maximum size is ${formatFileSize(maxSize)}.`)
-      return
-    }
-
-    // Check file type if accept is specified
-    if (accept) {
-      const acceptedTypes = accept.split(",").map((type) => type.trim())
-      const fileType = file.type
-
-      // Check if file type matches any of the accepted types
-      const isAccepted = acceptedTypes.some((type) => {
-        if (type.startsWith(".")) {
-          // Check file extension
-          return file.name.endsWith(type)
-        } else if (type.includes("*")) {
-          // Handle wildcards like image/*
-          return fileType.startsWith(type.split("*")[0])
-        } else {
-          // Exact match
-          return fileType === type
-        }
-      })
-
-      if (!isAccepted) {
-        setError(`File type not accepted. Please upload ${accept}.`)
-        return
-      }
-    }
-
-    setFile(file)
-  }
-
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true)
-    } else if (e.type === "dragleave") {
-      setDragActive(false)
-    }
-  }
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setDragActive(false)
-
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      validateAndSetFile(e.dataTransfer.files[0])
+      setFile(e.target.files[0])
+      setError(null)
+      setSuccess(false)
     }
   }
 
   const handleUpload = async () => {
-    if (!file) return
+    if (!file) {
+      setError("Please select a file to upload")
+      return
+    }
 
     setUploading(true)
     setError(null)
     setSuccess(false)
 
     try {
-      // Generate path with folder if provided
-      const path = folder ? `${folder}/${file.name}` : file.name
+      // Generate a unique filename
+      const fileExt = file.name.split(".").pop()
+      const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`
+      const filePath = `uploads/${fileName}`
 
       // Upload to Supabase Storage
-      const result = await uploadFile(file, bucket, path)
+      const fileUrl = await uploadFile(file, filePath)
+
+      if (!fileUrl) {
+        throw new Error("Failed to upload file")
+      }
+
+      // Create media record in database
+      const mediaItem = await createMedia({
+        filename: fileName,
+        original_filename: file.name,
+        file_path: filePath,
+        file_size: file.size,
+        mime_type: file.type,
+        alt_text: altText || null,
+        caption: caption || null,
+        width: null, // Could add image dimension detection here
+        height: null,
+      })
+
+      if (!mediaItem) {
+        throw new Error("Failed to create media record")
+      }
 
       setSuccess(true)
 
-      // Call the callback if provided
-      if (onUploadComplete) {
-        onUploadComplete({
-          url: result.url,
-          path: result.path,
-        })
+      // Reset form
+      setFile(null)
+      setAltText("")
+      setCaption("")
+      if (fileInputRef.current) {
+        fileInputRef.current.value = ""
       }
 
-      // Reset file after successful upload
-      setTimeout(() => {
-        setFile(null)
-        setSuccess(false)
-      }, 3000)
+      // Callback
+      if (onUploadComplete) {
+        onUploadComplete(mediaItem)
+      }
     } catch (err) {
-      console.error("Error uploading file:", err)
-      setError(err instanceof Error ? err.message : "Failed to upload file")
+      console.error("Upload error:", err)
+      setError(err instanceof Error ? err.message : "An error occurred during upload")
     } finally {
       setUploading(false)
     }
   }
 
-  const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes"
-    const k = 1024
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"]
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    return Number.parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i]
-  }
-
   return (
-    <div className={`space-y-4 ${className}`}>
-      <div
-        className={`border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
-          dragActive
-            ? "border-blue-500 bg-blue-500/10"
-            : success
-              ? "border-green-500 bg-green-500/10"
-              : error
-                ? "border-red-500 bg-red-500/10"
-                : file
-                  ? "border-blue-500 bg-blue-500/5"
-                  : "border-gray-300 hover:border-gray-400"
-        }`}
-        onDragEnter={handleDrag}
-        onDragLeave={handleDrag}
-        onDragOver={handleDrag}
-        onDrop={handleDrop}
-        onClick={() => inputRef.current?.click()}
-      >
-        <input ref={inputRef} type="file" onChange={handleFileChange} accept={accept} className="hidden" />
+    <div className="space-y-4">
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-        {file ? (
-          <div className="space-y-2">
-            <div className="flex items-center justify-center">
-              {success ? (
-                <Check className="h-8 w-8 text-green-500 mr-2" />
-              ) : (
-                <FileUp className="h-8 w-8 text-blue-500 mr-2" />
-              )}
-              <span className="text-lg font-medium">{success ? "Upload complete!" : "File selected"}</span>
-            </div>
-            <p className="text-gray-500 dark:text-gray-400">
-              {file.name} ({formatFileSize(file.size)})
-            </p>
-            {!success && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setFile(null)
-                }}
-                className="mt-2"
-              >
-                <X className="h-4 w-4 mr-1" /> Remove
-              </Button>
-            )}
-          </div>
-        ) : (
-          <>
-            <FileUp className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-2" />
-            <p className="text-lg font-medium">Drag and drop your file here</p>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">or click to browse</p>
-            {accept && <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Accepted formats: {accept}</p>}
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Max size: {formatFileSize(maxSize)}</p>
-          </>
-        )}
+      {success && (
+        <Alert className="bg-green-50 text-green-800 border-green-200">
+          <Check className="h-4 w-4" />
+          <AlertDescription>File uploaded successfully!</AlertDescription>
+        </Alert>
+      )}
+
+      <div className="space-y-2">
+        <Label htmlFor="file">File</Label>
+        <Input id="file" type="file" ref={fileInputRef} onChange={handleFileChange} />
       </div>
 
-      {error && (
-        <div className="text-red-500 text-sm bg-red-50 dark:bg-red-950/20 p-2 rounded border border-red-200 dark:border-red-800">
-          {error}
-        </div>
+      {file && (
+        <>
+          <div className="space-y-2">
+            <Label htmlFor="alt-text">Alt Text</Label>
+            <Input
+              id="alt-text"
+              value={altText}
+              onChange={(e) => setAltText(e.target.value)}
+              placeholder="Describe the image for accessibility"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="caption">Caption</Label>
+            <Input
+              id="caption"
+              value={caption}
+              onChange={(e) => setCaption(e.target.value)}
+              placeholder="Optional caption for the image"
+            />
+          </div>
+        </>
       )}
 
-      {file && !success && (
-        <Button
-          onClick={(e) => {
-            e.stopPropagation()
-            handleUpload()
-          }}
-          disabled={uploading}
-          className="w-full"
-        >
-          {uploading ? "Uploading..." : "Upload File"}
-        </Button>
-      )}
+      <Button onClick={handleUpload} disabled={!file || uploading} className="w-full">
+        {uploading ? (
+          <>
+            <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent"></div>
+            Uploading...
+          </>
+        ) : (
+          <>
+            <Upload className="mr-2 h-4 w-4" />
+            Upload File
+          </>
+        )}
+      </Button>
     </div>
   )
 }

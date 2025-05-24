@@ -1,6 +1,7 @@
 "use client"
 
 import { Linkedin, Mail } from "lucide-react"
+import Link from "next/link"
 
 export default function Footer() {
   return (
@@ -67,8 +68,13 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Harshit Dabhi. All rights reserved.</p>
+        <div className="border-t border-gray-800 mt-8 pt-8 flex justify-between items-center">
+          <div>
+            <Link href="/admin/login" className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+              Admin Login
+            </Link>
+          </div>
+          <p className="text-sm text-gray-400">&copy; {new Date().getFullYear()} Harshit Dabhi. All rights reserved.</p>
         </div>
       </div>
     </footer>

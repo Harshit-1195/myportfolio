@@ -1,20 +1,30 @@
 import { NextResponse } from "next/server"
 import type { NextRequest } from "next/server"
+import { createMiddlewareClient } from "@supabase/auth-helpers-nextjs"
 
-// Making middleware async
 export async function middleware(request: NextRequest) {
-  // Get the pathname
-  const path = request.nextUrl.pathname
+  // Create a Supabase client configured to use cookies
+  const supabase = createMiddlewareClient({ req: request, res: NextResponse.next() })
 
-  // Check if the path is for the admin area
-  if (path.startsWith("/admin")) {
-    // In a real application, you would check for authentication here
-    // For now, we'll just allow access
-    // Example of how you might implement authentication:
-    // const token = request.cookies.get('auth_token')?.value
-    // if (!token) {
-    //   return NextResponse.redirect(new URL('/login', request.url))
-    // }
+  // Refresh session if expired - required for Server Components
+  await supabase.auth.getSession()
+
+  // Check if we're on an admin page (but not the login page)
+  const isAdminPage = request.nextUrl.pathname.startsWith("/admin")
+  const isLoginPage = request.nextUrl.pathname === "/admin/login"
+
+  if (isAdminPage && !isLoginPage) {
+    // Get the user's session
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
+
+    // If no session, redirect to login
+    if (!session) {
+      const redirectUrl = new URL("/admin/login", request.url)
+      redirectUrl.searchParams.set("redirectTo", request.nextUrl.pathname)
+      return NextResponse.redirect(redirectUrl)
+    }
   }
 
   return NextResponse.next()

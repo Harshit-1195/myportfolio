@@ -1,582 +1,312 @@
-"use server"
+import { getSupabaseClient, getSupabaseAdmin } from "./supabase"
 
-import { getSupabaseServerClient } from "@/lib/supabase"
-
-// Helper function to handle Supabase errors
-const handleSupabaseError = (error: any, message: string) => {
-  console.error(message, error)
-  return null // Return null instead of throwing an error
+// Types
+export interface BlogPost {
+  id: string
+  title: string
+  slug: string
+  excerpt?: string
+  content: string
+  featured_image?: string
+  author: string
+  is_published: boolean
+  published_at?: string
+  meta_title?: string
+  meta_description?: string
+  meta_keywords?: string
+  canonical_url?: string
+  og_image?: string
+  views: number
+  created_at: string
+  updated_at: string
 }
 
-// Blog Posts
-export async function getAllBlogPosts() {
-  try {
-    const supabase = getSupabaseServerClient()
+export interface Project {
+  id: string
+  title: string
+  slug: string
+  description?: string
+  content: string
+  featured_image?: string
+  gallery?: string[]
+  technologies?: string[]
+  project_url?: string
+  github_url?: string
+  order_index: number
+  published: boolean
+  meta_title?: string
+  meta_description?: string
+  meta_keywords?: string
+  canonical_url?: string
+  og_image?: string
+  created_at: string
+  updated_at: string
+}
 
-    // Check if the table exists first
-    const { error: tableCheckError } = await supabase.from("blog_posts").select("count").limit(1).single()
+export interface Media {
+  id: string
+  filename: string
+  original_filename: string
+  file_path: string
+  file_size: number
+  mime_type: string
+  alt_text?: string
+  caption?: string
+  width?: number
+  height?: number
+  created_at: string
+  updated_at: string
+}
 
-    // If the table doesn't exist, return an empty array
-    if (tableCheckError && tableCheckError.message.includes("does not exist")) {
-      console.warn("The blog_posts table does not exist yet. Please run the database setup.")
-      return []
-    }
+// Blog post functions
+export async function getAllBlogPosts(): Promise<BlogPost[]> {
+  const supabase = getSupabaseClient()
+  const { data, error } = await supabase.from("blog_posts").select("*").order("created_at", { ascending: false })
 
-    const { data, error } = await supabase.from("blog_posts").select("*").order("created_at", { ascending: false })
-
-    if (error) {
-      console.error("Error fetching blog posts:", error)
-      return []
-    }
-
-    return data || []
-  } catch (error) {
-    console.error("Unexpected error fetching blog posts:", error)
+  if (error) {
+    console.error("Error fetching blog posts:", error)
     return []
   }
+
+  return data || []
 }
 
-export async function getBlogPostBySlug(slug: string) {
-  try {
-    const supabase = getSupabaseServerClient()
+export async function getPublishedBlogPosts(): Promise<BlogPost[]> {
+  const supabase = getSupabaseClient()
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .select("*")
+    .eq("is_published", true)
+    .order("published_at", { ascending: false })
 
-    const { data, error } = await supabase.from("blog_posts").select("*").eq("slug", slug).single()
+  if (error) {
+    console.error("Error fetching published blog posts:", error)
+    return []
+  }
 
-    if (error) {
-      console.error(`Error fetching blog post with slug ${slug}:`, error)
-      return null
-    }
+  return data || []
+}
 
-    return data
-  } catch (error) {
-    console.error(`Unexpected error fetching blog post with slug ${slug}:`, error)
+export async function getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  const supabase = getSupabaseClient()
+  const { data, error } = await supabase.from("blog_posts").select("*").eq("slug", slug).single()
+
+  if (error) {
+    console.error(`Error fetching blog post with slug ${slug}:`, error)
     return null
+  }
+
+  return data
+}
+
+export async function incrementBlogPostViews(slug: string): Promise<void> {
+  const supabase = getSupabaseAdmin()
+  const { error } = await supabase.rpc("increment_blog_post_views", { post_slug: slug })
+
+  if (error) {
+    console.error(`Error incrementing views for blog post with slug ${slug}:`, error)
   }
 }
 
-export async function createBlogPost(post: any) {
-  const supabase = getSupabaseServerClient()
+export async function createBlogPost(
+  post: Omit<BlogPost, "id" | "created_at" | "updated_at" | "views">,
+): Promise<BlogPost | null> {
+  const supabase = getSupabaseAdmin()
+  const { data, error } = await supabase
+    .from("blog_posts")
+    .insert([{ ...post, views: 0 }])
+    .select()
+    .single()
 
-  try {
-    const { data, error } = await supabase.from("blog_posts").insert([post]).select().single()
-
-    if (error) {
-      handleSupabaseError(error, "Error creating blog post")
-      return null
-    }
-
-    return data || null
-  } catch (error: any) {
+  if (error) {
     console.error("Error creating blog post:", error)
     return null
   }
+
+  return data
 }
 
-export async function updateBlogPost(id: string, updates: any) {
-  const supabase = getSupabaseServerClient()
+export async function updateBlogPost(slug: string, updates: Partial<BlogPost>): Promise<BlogPost | null> {
+  const supabase = getSupabaseAdmin()
+  const { data, error } = await supabase.from("blog_posts").update(updates).eq("slug", slug).select().single()
 
-  try {
-    const { data, error } = await supabase.from("blog_posts").update(updates).eq("id", id).select().single()
-
-    if (error) {
-      handleSupabaseError(error, `Error updating blog post with id ${id}`)
-      return null
-    }
-
-    return data || null
-  } catch (error: any) {
-    console.error(`Error updating blog post with id ${id}:`, error)
+  if (error) {
+    console.error(`Error updating blog post with slug ${slug}:`, error)
     return null
   }
+
+  return data
 }
 
-export async function deleteBlogPost(id: string) {
-  const supabase = getSupabaseServerClient()
+export async function deleteBlogPost(slug: string): Promise<boolean> {
+  const supabase = getSupabaseAdmin()
+  const { error } = await supabase.from("blog_posts").delete().eq("slug", slug)
 
-  try {
-    const { error } = await supabase.from("blog_posts").delete().eq("id", id)
-
-    if (error) {
-      handleSupabaseError(error, `Error deleting blog post with id ${id}`)
-      return false
-    }
-
-    return !error
-  } catch (error: any) {
-    console.error(`Error deleting blog post with id ${id}:`, error)
+  if (error) {
+    console.error(`Error deleting blog post with slug ${slug}:`, error)
     return false
   }
+
+  return true
 }
 
-// Projects
-export async function getAllProjects() {
-  try {
-    const supabase = getSupabaseServerClient()
+// Project functions
+export async function getAllProjects(): Promise<Project[]> {
+  const supabase = getSupabaseClient()
+  const { data, error } = await supabase.from("projects").select("*").order("order_index", { ascending: true })
 
-    // Check if the table exists first
-    const { error: tableCheckError } = await supabase.from("projects").select("count").limit(1).single()
-
-    // If the table doesn't exist, return an empty array
-    if (tableCheckError && tableCheckError.message.includes("does not exist")) {
-      console.warn("The projects table does not exist yet. Please run the database setup.")
-      return []
-    }
-
-    const { data, error } = await supabase.from("projects").select("*").order("order_index", { ascending: true })
-
-    if (error) {
-      console.error("Error fetching projects:", error)
-      return []
-    }
-
-    return data || []
-  } catch (error) {
-    console.error("Unexpected error fetching projects:", error)
+  if (error) {
+    console.error("Error fetching projects:", error)
     return []
   }
+
+  return data || []
 }
 
-export async function getProjectBySlug(slug: string) {
-  const supabase = getSupabaseServerClient()
+export async function getPublishedProjects(): Promise<Project[]> {
+  const supabase = getSupabaseClient()
+  const { data, error } = await supabase
+    .from("projects")
+    .select("*")
+    .eq("published", true)
+    .order("order_index", { ascending: true })
 
-  try {
-    const { data, error } = await supabase.from("projects").select("*").eq("slug", slug).single()
+  if (error) {
+    console.error("Error fetching published projects:", error)
+    return []
+  }
 
-    if (error) {
-      handleSupabaseError(error, `Error fetching project with slug ${slug}`)
-      return null
-    }
+  return data || []
+}
 
-    return data || null
-  } catch (error: any) {
+export async function getProjectBySlug(slug: string): Promise<Project | null> {
+  const supabase = getSupabaseClient()
+  const { data, error } = await supabase.from("projects").select("*").eq("slug", slug).single()
+
+  if (error) {
     console.error(`Error fetching project with slug ${slug}:`, error)
     return null
   }
+
+  return data
 }
 
-export async function createProject(project: any) {
-  const supabase = getSupabaseServerClient()
+export async function createProject(
+  project: Omit<Project, "id" | "created_at" | "updated_at">,
+): Promise<Project | null> {
+  const supabase = getSupabaseAdmin()
+  const { data, error } = await supabase.from("projects").insert([project]).select().single()
 
-  try {
-    const { data, error } = await supabase.from("projects").insert([project]).select().single()
-
-    if (error) {
-      handleSupabaseError(error, "Error creating project")
-      return null
-    }
-
-    return data || null
-  } catch (error: any) {
+  if (error) {
     console.error("Error creating project:", error)
     return null
   }
+
+  return data
 }
 
-export async function updateProject(id: string, updates: any) {
-  const supabase = getSupabaseServerClient()
+export async function updateProject(slug: string, updates: Partial<Project>): Promise<Project | null> {
+  const supabase = getSupabaseAdmin()
+  const { data, error } = await supabase.from("projects").update(updates).eq("slug", slug).select().single()
 
-  try {
-    const { data, error } = await supabase.from("projects").update(updates).eq("id", id).select().single()
-
-    if (error) {
-      handleSupabaseError(error, `Error updating project with id ${id}`)
-      return null
-    }
-
-    return data || null
-  } catch (error: any) {
-    console.error(`Error updating project with id ${id}:`, error)
+  if (error) {
+    console.error(`Error updating project with slug ${slug}:`, error)
     return null
   }
+
+  return data
 }
 
-export async function deleteProject(id: string) {
-  const supabase = getSupabaseServerClient()
+export async function deleteProject(slug: string): Promise<boolean> {
+  const supabase = getSupabaseAdmin()
+  const { error } = await supabase.from("projects").delete().eq("slug", slug)
 
-  try {
-    const { error } = await supabase.from("projects").delete().eq("id", id)
-
-    if (error) {
-      handleSupabaseError(error, `Error deleting project with id ${id}`)
-      return false
-    }
-
-    return !error
-  } catch (error: any) {
-    console.error(`Error deleting project with id ${id}:`, error)
+  if (error) {
+    console.error(`Error deleting project with slug ${slug}:`, error)
     return false
   }
+
+  return true
 }
 
-// Case Studies
-export async function getAllCaseStudies() {
-  try {
-    const supabase = getSupabaseServerClient()
+// Media functions
+export async function getAllMedia(): Promise<Media[]> {
+  const supabase = getSupabaseClient()
+  const { data, error } = await supabase.from("media").select("*").order("created_at", { ascending: false })
 
-    // Check if the table exists first
-    const { error: tableCheckError } = await supabase.from("case_studies").select("count").limit(1).single()
-
-    // If the table doesn't exist, return an empty array
-    if (tableCheckError && tableCheckError.message.includes("does not exist")) {
-      console.warn("The case_studies table does not exist yet. Please run the database setup.")
-      return []
-    }
-
-    const { data, error } = await supabase.from("case_studies").select("*").order("order_index", { ascending: true })
-
-    if (error) {
-      console.error("Error fetching case studies:", error)
-      return []
-    }
-
-    return data || []
-  } catch (error) {
-    console.error("Unexpected error fetching case studies:", error)
+  if (error) {
+    console.error("Error fetching media:", error)
     return []
   }
+
+  return data || []
 }
 
-export async function getCaseStudyBySlug(slug: string) {
-  const supabase = getSupabaseServerClient()
+export async function getMediaById(id: string): Promise<Media | null> {
+  const supabase = getSupabaseClient()
+  const { data, error } = await supabase.from("media").select("*").eq("id", id).single()
 
-  try {
-    const { data, error } = await supabase.from("case_studies").select("*").eq("slug", slug).single()
-
-    if (error) {
-      handleSupabaseError(error, `Error fetching case study with slug ${slug}`)
-      return null
-    }
-
-    return data || null
-  } catch (error: any) {
-    console.error(`Error fetching case study with slug ${slug}:`, error)
+  if (error) {
+    console.error(`Error fetching media with id ${id}:`, error)
     return null
   }
+
+  return data
 }
 
-export async function createCaseStudy(caseStudy: any) {
-  const supabase = getSupabaseServerClient()
+export async function createMedia(media: Omit<Media, "id" | "created_at" | "updated_at">): Promise<Media | null> {
+  const supabase = getSupabaseAdmin()
+  const { data, error } = await supabase.from("media").insert([media]).select().single()
 
-  try {
-    const { data, error } = await supabase.from("case_studies").insert([caseStudy]).select().single()
-
-    if (error) {
-      handleSupabaseError(error, "Error creating case study")
-      return null
-    }
-
-    return data || null
-  } catch (error: any) {
-    console.error("Error creating case study:", error)
+  if (error) {
+    console.error("Error creating media:", error)
     return null
   }
+
+  return data
 }
 
-export async function updateCaseStudy(id: string, updates: any) {
-  const supabase = getSupabaseServerClient()
+export async function deleteMedia(id: string): Promise<boolean> {
+  const supabase = getSupabaseAdmin()
+  const { error } = await supabase.from("media").delete().eq("id", id)
 
-  try {
-    const { data, error } = await supabase.from("case_studies").update(updates).eq("id", id).select().single()
-
-    if (error) {
-      handleSupabaseError(error, `Error updating case study with id ${id}`)
-      return null
-    }
-
-    return data || null
-  } catch (error: any) {
-    console.error(`Error updating case study with id ${id}:`, error)
-    return null
-  }
-}
-
-export async function deleteCaseStudy(id: string) {
-  const supabase = getSupabaseServerClient()
-
-  try {
-    const { error } = await supabase.from("case_studies").delete().eq("id", id)
-
-    if (error) {
-      handleSupabaseError(error, `Error deleting case study with id ${id}`)
-      return false
-    }
-
-    return !error
-  } catch (error: any) {
-    console.error(`Error deleting case study with id ${id}:`, error)
+  if (error) {
+    console.error(`Error deleting media with id ${id}:`, error)
     return false
   }
+
+  return true
 }
 
-// Logo Stories
-export async function getAllLogoStories() {
-  try {
-    const supabase = getSupabaseServerClient()
+// Storage functions
+export async function uploadFile(file: File, path: string): Promise<string | null> {
+  const supabase = getSupabaseClient()
+  const { data, error } = await supabase.storage.from("media").upload(path, file, {
+    cacheControl: "3600",
+    upsert: false,
+  })
 
-    // Check if the table exists first
-    const { error: tableCheckError } = await supabase.from("logo_stories").select("count").limit(1).single()
-
-    // If the table doesn't exist, return an empty array
-    if (tableCheckError && tableCheckError.message.includes("does not exist")) {
-      console.warn("The logo_stories table does not exist yet. Please run the database setup.")
-      return []
-    }
-
-    const { data, error } = await supabase.from("logo_stories").select("*").order("order_index", { ascending: true })
-
-    if (error) {
-      console.error("Error fetching logo stories:", error)
-      return []
-    }
-
-    return data || []
-  } catch (error) {
-    console.error("Unexpected error fetching logo stories:", error)
-    return []
-  }
-}
-
-export async function getLogoStoryById(id: string) {
-  const supabase = getSupabaseServerClient()
-
-  try {
-    const { data, error } = await supabase.from("logo_stories").select("*").eq("id", id).single()
-
-    if (error) {
-      handleSupabaseError(error, `Error fetching logo story with id ${id}`)
-      return null
-    }
-
-    return data || null
-  } catch (error: any) {
-    console.error(`Error fetching logo story with id ${id}:`, error)
+  if (error) {
+    console.error("Error uploading file:", error)
     return null
   }
+
+  // Get public URL
+  const {
+    data: { publicUrl },
+  } = supabase.storage.from("media").getPublicUrl(data.path)
+
+  return publicUrl
 }
 
-export async function createLogoStory(logoStory: any) {
-  const supabase = getSupabaseServerClient()
+export async function deleteFile(path: string): Promise<boolean> {
+  const supabase = getSupabaseClient()
+  const { error } = await supabase.storage.from("media").remove([path])
 
-  try {
-    const { data, error } = await supabase.from("logo_stories").insert([logoStory]).select().single()
-
-    if (error) {
-      handleSupabaseError(error, "Error creating logo story")
-      return null
-    }
-
-    return data || null
-  } catch (error: any) {
-    console.error("Error creating logo story:", error)
-    return null
-  }
-}
-
-export async function updateLogoStory(id: string, updates: any) {
-  const supabase = getSupabaseServerClient()
-
-  try {
-    const { data, error } = await supabase.from("logo_stories").update(updates).eq("id", id).select().single()
-
-    if (error) {
-      handleSupabaseError(error, `Error updating logo story with id ${id}`)
-      return null
-    }
-
-    return data || null
-  } catch (error: any) {
-    console.error(`Error updating logo story with id ${id}:`, error)
-    return null
-  }
-}
-
-export async function deleteLogoStory(id: string) {
-  const supabase = getSupabaseServerClient()
-
-  try {
-    const { error } = await supabase.from("logo_stories").delete().eq("id", id)
-
-    if (error) {
-      handleSupabaseError(error, `Error deleting logo story with id ${id}`)
-      return false
-    }
-
-    return !error
-  } catch (error: any) {
-    console.error(`Error deleting logo story with id ${id}:`, error)
+  if (error) {
+    console.error(`Error deleting file at path ${path}:`, error)
     return false
   }
-}
 
-export async function createSampleData() {
-  try {
-    const supabase = getSupabaseServerClient()
-
-    // Sample blog posts
-    const blogPosts = [
-      {
-        title: "The Future of Programmatic Advertising in 2024",
-        slug: "future-programmatic-advertising-2024",
-        excerpt: "Explore the latest trends and technologies shaping programmatic advertising in 2024.",
-        content: "# The Future of Programmatic Advertising in 2024",
-        featured_image: "/digital-advertising-technology.png",
-        author: "Harshit Dabhi",
-        category: "Programmatic",
-        tags: ["Programmatic", "Advertising", "AI", "Technology", "Digital Marketing"],
-        published_at: new Date().toISOString(),
-        is_published: true,
-        views: 245,
-      },
-      {
-        title: "Maximizing ROI with Omnichannel Media Buying",
-        slug: "maximizing-roi-omnichannel-media-buying",
-        excerpt: "Learn how to create cohesive campaigns across multiple channels to maximize your marketing ROI.",
-        content: "# Maximizing ROI with Omnichannel Media Buying",
-        featured_image: "/omnichannel-marketing.png",
-        author: "Harshit Dabhi",
-        category: "Media Buying",
-        tags: ["Media Buying", "Omnichannel", "ROI", "Strategy", "Digital Marketing"],
-        published_at: new Date().toISOString(),
-        is_published: true,
-        views: 189,
-      },
-      {
-        title: "Data-Driven Decision Making in Digital Marketing",
-        slug: "data-driven-decision-making-digital-marketing",
-        excerpt: "Discover how to leverage analytics tools to make informed marketing decisions that drive results.",
-        content: "# Data-Driven Decision Making in Digital Marketing",
-        featured_image: "/data-analytics-dashboard.png",
-        author: "Harshit Dabhi",
-        category: "Analytics",
-        tags: ["Analytics", "Data", "Decision Making", "Digital Marketing", "Strategy"],
-        published_at: new Date().toISOString(),
-        is_published: true,
-        views: 210,
-      },
-    ]
-
-    // Insert blog posts
-    const { error: blogError } = await supabase.from("blog_posts").insert(blogPosts)
-    if (blogError) {
-      console.error("Error creating blog posts:", blogError)
-      return { success: false, error: blogError.message }
-    }
-
-    return {
-      success: true,
-      message: "Sample data created successfully",
-      counts: {
-        blogPosts: blogPosts.length,
-      },
-    }
-  } catch (error: any) {
-    console.error("Error creating sample data:", error)
-    return { success: false, error: error.message }
-  }
-}
-
-// Resume and presentation URL functions
-export async function getResumeUrl(): Promise<string | null> {
-  try {
-    const supabase = getSupabaseServerClient()
-
-    // Check if the assets table exists
-    const { error: tableCheckError } = await supabase.from("assets").select("count").limit(1).single()
-
-    // If the table doesn't exist, return null
-    if (tableCheckError && tableCheckError.message.includes("does not exist")) {
-      console.warn("The assets table does not exist yet. Please run the database setup.")
-      return null
-    }
-
-    const { data, error } = await supabase
-      .from("assets")
-      .select("url")
-      .eq("type", "resume")
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single()
-
-    if (error) {
-      console.error("Error fetching resume URL:", error)
-      return null
-    }
-
-    return data?.url || null
-  } catch (error) {
-    console.error("Unexpected error fetching resume URL:", error)
-    return null
-  }
-}
-
-export async function getPresentationUrl(): Promise<string | null> {
-  try {
-    const supabase = getSupabaseServerClient()
-
-    // Check if the assets table exists
-    const { error: tableCheckError } = await supabase.from("assets").select("count").limit(1).single()
-
-    // If the table doesn't exist, return null
-    if (tableCheckError && tableCheckError.message.includes("does not exist")) {
-      console.warn("The assets table does not exist yet. Please run the database setup.")
-      return null
-    }
-
-    const { data, error } = await supabase
-      .from("assets")
-      .select("url")
-      .eq("type", "presentation")
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .single()
-
-    if (error) {
-      console.error("Error fetching presentation URL:", error)
-      return null
-    }
-
-    return data?.url || null
-  } catch (error) {
-    console.error("Unexpected error fetching presentation URL:", error)
-    return null
-  }
-}
-
-export async function trackAssetDownload(assetId: string, assetType: string): Promise<boolean> {
-  try {
-    const supabase = getSupabaseServerClient()
-
-    // Check if the downloads table exists
-    const { error: tableCheckError } = await supabase.from("downloads").select("count").limit(1).single()
-
-    // If the table doesn't exist, create it
-    if (tableCheckError && tableCheckError.message.includes("does not exist")) {
-      // Create downloads table
-      const { error: createTableError } = await supabase.rpc("create_downloads_table_if_not_exists")
-
-      if (createTableError) {
-        console.error("Error creating downloads table:", createTableError)
-        return false
-      }
-    }
-
-    // Record the download
-    const { error } = await supabase.from("downloads").insert([
-      {
-        asset_id: assetId,
-        asset_type: assetType,
-        downloaded_at: new Date().toISOString(),
-      },
-    ])
-
-    if (error) {
-      console.error("Error tracking asset download:", error)
-      return false
-    }
-
-    return true
-  } catch (error) {
-    console.error("Unexpected error tracking asset download:", error)
-    return false
-  }
+  return true
 }
