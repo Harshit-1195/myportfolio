@@ -3,13 +3,18 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, FileText, FolderOpen, ImageIcon, Settings, LogOut } from "lucide-react"
+import { LayoutDashboard, FileText, FolderOpen, ImageIcon, Settings, LogOut, Edit } from "lucide-react"
 
 const navItems = [
   {
     title: "Dashboard",
-    href: "/admin/dashboard",
+    href: "/admin",
     icon: LayoutDashboard,
+  },
+  {
+    title: "Content Management",
+    href: "/admin/content",
+    icon: Edit,
   },
   {
     title: "Blog Posts",

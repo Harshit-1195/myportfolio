@@ -443,14 +443,6 @@ export default function BlogPostEditor({ params }: { params: { action: string } 
                       >
                         Remove
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-blue-400 hover:text-blue-300"
-                        onClick={() => window.open(post.featured_image!, "_blank")}
-                      >
-                        View
-                      </Button>
                     </div>
                   </div>
                 ) : (

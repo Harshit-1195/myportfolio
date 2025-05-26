@@ -1,6 +1,6 @@
 "use client"
 
-import { Linkedin, Mail } from "lucide-react"
+import { Linkedin } from "lucide-react"
 import Link from "next/link"
 
 export default function Footer() {
@@ -18,21 +18,15 @@ export default function Footer() {
               optimization. Specializing in global programmatic campaigns and data-driven strategies.
             </p>
             <div className="flex space-x-4">
-              {[
-                { href: "https://www.linkedin.com/in/harshitdabhi/", icon: <Linkedin size={20} />, label: "LinkedIn" },
-                { href: "mailto:dabhiharshit11@gmail.com", icon: <Mail size={20} />, label: "Email" },
-              ].map((link, index) => (
-                <a
-                  key={index}
-                  href={link.href}
-                  target="_blank"
-                  className="text-gray-400 hover:text-white transition-colors relative z-10 block p-1"
-                  rel="noreferrer"
-                >
-                  {link.icon}
-                  <span className="sr-only">{link.label}</span>
-                </a>
-              ))}
+              <a
+                href="https://linkedin.com/in/harshitdabhi"
+                target="_blank"
+                className="text-gray-400 hover:text-white transition-colors relative z-10 block p-1"
+                rel="noreferrer"
+              >
+                <Linkedin size={20} />
+                <span className="sr-only">LinkedIn</span>
+              </a>
             </div>
           </div>
 
@@ -62,8 +56,9 @@ export default function Footer() {
             <h3 className="text-lg font-medium mb-4">Contact</h3>
             <div className="space-y-2 text-gray-400">
               <p>Dubai, UAE</p>
-              <p>dabhiharshit11@gmail.com</p>
-              <p>+971 556453208</p>
+              <Link href="/contact" className="block hover:text-white transition-colors underline">
+                Contact Form
+              </Link>
             </div>
           </div>
         </div>

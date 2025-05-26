@@ -1,7 +1,7 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Phone, Mail, MapPin, Linkedin, Calendar, Send } from "lucide-react"
+import { MapPin, Linkedin, Calendar, Send } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -27,25 +27,10 @@ export default function ContactPage() {
 
   const contactInfo = [
     {
-      icon: <Phone className="h-6 w-6" />,
-      title: "Phone",
-      value: "+971556453208",
-      action: "tel:+971556453208",
-      delay: 0.1,
-    },
-    {
-      icon: <Mail className="h-6 w-6" />,
-      title: "Email",
-      value: "dabhiharshit11@gmail.com",
-      action: "mailto:dabhiharshit11@gmail.com",
-      delay: 0.2,
-    },
-    {
       icon: <MapPin className="h-6 w-6" />,
       title: "Location",
       value: "Dubai, UAE",
-      action: "https://maps.google.com/?q=Dubai,UAE",
-      delay: 0.3,
+      delay: 0.1,
     },
   ]
 
@@ -65,11 +50,10 @@ export default function ContactPage() {
         <h1 className="text-3xl md:text-4xl font-bold text-white">Contact</h1>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+      <div className="grid grid-cols-1 md:grid-cols-1 gap-6 mb-12 max-w-md mx-auto">
         {contactInfo.map((item, index) => (
-          <motion.a
+          <motion.div
             key={index}
-            href={item.action}
             className="glass-panel p-8 rounded-lg text-center flex flex-col items-center justify-center overflow-hidden relative hover-glow"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -98,7 +82,7 @@ export default function ContactPage() {
             </motion.div>
             <h3 className="text-xl font-semibold mb-2 text-white z-10 relative">{item.title}</h3>
             <p className="text-white/70 z-10 relative">{item.value}</p>
-          </motion.a>
+          </motion.div>
         ))}
       </div>
 

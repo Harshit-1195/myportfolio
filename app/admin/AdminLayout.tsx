@@ -99,6 +99,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <Link href="/admin/case-studies" className="text-gray-300 hover:text-white">
                 Case Studies
               </Link>
+              <Link href="/admin/content" className="text-gray-300 hover:text-white">
+                Content
+              </Link>
               <Link href="/admin/media" className="text-gray-300 hover:text-white">
                 Media
               </Link>
