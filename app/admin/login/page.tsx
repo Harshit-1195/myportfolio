@@ -1,13 +1,13 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Loader2, AlertCircle, Eye, EyeOff } from "lucide-react"
+import { Loader2, AlertCircle, Eye, EyeOff, CheckCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 
@@ -17,9 +17,24 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
   const router = useRouter()
   const supabase = createClientComponentClient()
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const message = urlParams.get("message")
+    const error = urlParams.get("error")
+
+    if (message === "password_updated") {
+      setSuccessMessage("Password updated successfully! Please log in with your new password.")
+    }
+
+    if (error === "auth_callback_error") {
+      setError("There was an error with the authentication callback. Please try again.")
+    }
+  }, [])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -60,6 +75,13 @@ export default function AdminLogin() {
             <div className="mb-4 p-3 bg-red-900/50 border border-red-800 rounded-md text-red-300 text-sm flex items-center space-x-2">
               <AlertCircle className="w-4 h-4 flex-shrink-0" />
               <span>{error}</span>
+            </div>
+          )}
+
+          {successMessage && (
+            <div className="mb-4 p-3 bg-green-900/50 border border-green-800 rounded-md text-green-300 text-sm flex items-center space-x-2">
+              <CheckCircle className="w-4 h-4 flex-shrink-0" />
+              <span>{successMessage}</span>
             </div>
           )}
 

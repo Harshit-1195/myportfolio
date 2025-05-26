@@ -16,6 +16,7 @@ export default function ForgotPassword() {
   const [error, setError] = useState<string | null>(null)
   const [message, setMessage] = useState<string | null>(null)
   const [emailSent, setEmailSent] = useState(false)
+  const [showDebug, setShowDebug] = useState(false)
 
   const router = useRouter()
   const supabase = createClientComponentClient()
@@ -28,23 +29,49 @@ export default function ForgotPassword() {
       return
     }
 
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setError("Please enter a valid email address")
+      return
+    }
+
     setLoading(true)
     setError(null)
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/admin/reset-password`,
+      // Get the current origin for the redirect URL
+      const origin = typeof window !== "undefined" ? window.location.origin : ""
+      const redirectTo = `${origin}/admin/reset-password`
+
+      console.log("Sending password reset to:", email)
+      console.log("Redirect URL:", redirectTo)
+
+      const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: redirectTo,
       })
 
       if (error) {
+        console.error("Supabase reset password error:", error)
         throw error
       }
 
-      setMessage("Password reset email sent! Please check your inbox and follow the instructions.")
+      console.log("Password reset response:", data)
+      setMessage("Password reset email sent! Please check your inbox and spam folder.")
       setEmailSent(true)
     } catch (err: any) {
       console.error("Password reset error:", err)
-      setError(err.message || "Failed to send reset email. Please try again.")
+
+      // Provide more specific error messages
+      if (err.message?.includes("Email not confirmed")) {
+        setError("This email address is not confirmed. Please contact support.")
+      } else if (err.message?.includes("User not found")) {
+        setError("No account found with this email address.")
+      } else if (err.message?.includes("Email rate limit")) {
+        setError("Too many reset attempts. Please wait a few minutes before trying again.")
+      } else {
+        setError(err.message || "Failed to send reset email. Please try again or contact support.")
+      }
     } finally {
       setLoading(false)
     }
@@ -148,6 +175,26 @@ export default function ForgotPassword() {
               </div>
             </div>
           )}
+
+          {showDebug && (
+            <div className="mt-4 p-3 bg-gray-900/50 border border-gray-600 rounded-md text-xs text-gray-300">
+              <h4 className="font-semibold mb-2">Debug Information:</h4>
+              <p>Current URL: {typeof window !== "undefined" ? window.location.href : "N/A"}</p>
+              <p>
+                Redirect URL: {typeof window !== "undefined" ? `${window.location.origin}/admin/reset-password` : "N/A"}
+              </p>
+              <p>Supabase URL: {process.env.NEXT_PUBLIC_SUPABASE_URL || "Not configured"}</p>
+            </div>
+          )}
+
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setShowDebug(!showDebug)}
+            className="text-xs text-gray-500 hover:text-gray-300"
+          >
+            {showDebug ? "Hide" : "Show"} Debug Info
+          </Button>
 
           <div className="mt-6 text-center">
             <Button

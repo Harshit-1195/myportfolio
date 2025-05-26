@@ -30,8 +30,28 @@ export default function ResetPassword() {
         const accessToken = searchParams.get("access_token")
         const refreshToken = searchParams.get("refresh_token")
         const type = searchParams.get("type")
+        const error = searchParams.get("error")
+        const errorDescription = searchParams.get("error_description")
+
+        console.log("Reset password URL params:", {
+          type,
+          hasAccessToken: !!accessToken,
+          hasRefreshToken: !!refreshToken,
+          error,
+          errorDescription,
+        })
+
+        // Check for URL errors first
+        if (error) {
+          console.error("URL contains error:", error, errorDescription)
+          setError(`Reset link error: ${errorDescription || error}`)
+          setCheckingSession(false)
+          return
+        }
 
         if (type === "recovery" && accessToken && refreshToken) {
+          console.log("Processing recovery tokens...")
+
           // Set the session using the tokens from the URL
           const { data, error } = await supabase.auth.setSession({
             access_token: accessToken,
@@ -42,10 +62,13 @@ export default function ResetPassword() {
             console.error("Error setting session:", error)
             setError("Invalid or expired reset link. Please request a new password reset.")
           } else if (data.session) {
+            console.log("Session set successfully:", data.session.user?.email)
             setIsValidSession(true)
             setMessage("Reset link verified. Please enter your new password.")
           }
         } else {
+          console.log("Checking existing session...")
+
           // Check if we already have a valid session
           const {
             data: { session },
@@ -56,9 +79,11 @@ export default function ResetPassword() {
             console.error("Error getting session:", error)
             setError("Unable to verify session. Please try again.")
           } else if (session) {
+            console.log("Found existing session:", session.user?.email)
             setIsValidSession(true)
             setMessage("Session verified. Please enter your new password.")
           } else {
+            console.log("No valid session found")
             setError("Invalid or expired reset link. Please request a new password reset.")
           }
         }
@@ -76,6 +101,12 @@ export default function ResetPassword() {
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    // Enhanced password validation
+    if (!password || !confirmPassword) {
+      setError("Please fill in both password fields")
+      return
+    }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match")
       return
@@ -86,31 +117,49 @@ export default function ResetPassword() {
       return
     }
 
+    // Check for at least one number and one letter
+    if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(password)) {
+      setError("Password must contain at least one letter and one number")
+      return
+    }
+
     setLoading(true)
     setError(null)
 
     try {
-      const { error } = await supabase.auth.updateUser({
+      console.log("Updating password...")
+
+      const { data, error } = await supabase.auth.updateUser({
         password: password,
       })
 
       if (error) {
+        console.error("Password update error:", error)
         throw error
       }
 
+      console.log("Password updated successfully:", data)
       setMessage("Password updated successfully! Redirecting to login...")
 
       // Clear the form
       setPassword("")
       setConfirmPassword("")
 
+      // Sign out to ensure clean state
+      await supabase.auth.signOut()
+
       // Redirect to login after 3 seconds
       setTimeout(() => {
-        router.push("/admin/login")
+        router.push("/admin/login?message=password_updated")
       }, 3000)
     } catch (err: any) {
       console.error("Password update error:", err)
-      setError(err.message || "Failed to update password. Please try again.")
+
+      if (err.message?.includes("session_not_found")) {
+        setError("Your session has expired. Please request a new password reset.")
+      } else {
+        setError(err.message || "Failed to update password. Please try again.")
+      }
     } finally {
       setLoading(false)
     }
