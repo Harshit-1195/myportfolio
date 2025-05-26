@@ -1,36 +1,59 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { getSupabaseClient } from "@/lib/supabase"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { getAllBlogPosts, getAllProjects } from "@/lib/cms-service"
-import { FileText, FolderOpen, Upload } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { FileText, FolderOpen, Upload, AlertCircle, Settings } from "lucide-react"
 import Link from "next/link"
+import { checkSupabaseConfig } from "@/lib/supabase"
 
 export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null)
   const [blogCount, setBlogCount] = useState(0)
   const [projectCount, setProjectCount] = useState(0)
   const [loading, setLoading] = useState(true)
+  const [configError, setConfigError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true)
       try {
+        // Check Supabase configuration first
+        const config = checkSupabaseConfig()
+
+        if (!config.isConfigured) {
+          setConfigError(
+            `Missing Supabase configuration: ${!config.hasUrl ? "URL " : ""}${!config.hasAnonKey ? "ANON_KEY" : ""}`,
+          )
+          setLoading(false)
+          return
+        }
+
+        // Try to import and use Supabase
+        const { getSupabaseClient, getAllBlogPosts, getAllProjects } = await import("@/lib/supabase")
+        const { getAllBlogPosts: getBlogPosts, getAllProjects: getProjects } = await import("@/lib/cms-service")
+
         const supabase = getSupabaseClient()
         const {
           data: { user },
         } = await supabase.auth.getUser()
         setUser(user)
 
-        // Get counts
-        const blogPosts = await getAllBlogPosts()
-        const projects = await getAllProjects()
-
-        setBlogCount(blogPosts.length)
-        setProjectCount(projects.length)
+        // Get counts with fallback
+        try {
+          const blogPosts = await getBlogPosts()
+          const projects = await getProjects()
+          setBlogCount(blogPosts.length)
+          setProjectCount(projects.length)
+        } catch (error) {
+          console.warn("Could not fetch content counts:", error)
+          setBlogCount(0)
+          setProjectCount(0)
+        }
       } catch (error) {
         console.error("Error fetching dashboard data:", error)
+        setConfigError(error.message || "Failed to initialize dashboard")
       } finally {
         setLoading(false)
       }
@@ -43,6 +66,56 @@ export default function AdminDashboard() {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
+      </div>
+    )
+  }
+
+  if (configError) {
+    return (
+      <div className="container mx-auto py-10">
+        <Alert variant="destructive" className="mb-6">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            <strong>Configuration Error:</strong> {configError}
+          </AlertDescription>
+        </Alert>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Settings className="mr-2 h-5 w-5" />
+              Setup Required
+            </CardTitle>
+            <CardDescription>
+              Your Supabase configuration is incomplete. Please set up your environment variables.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <h3 className="font-semibold">Required Environment Variables:</h3>
+              <ul className="list-disc list-inside space-y-1 text-sm">
+                <li>
+                  <code>NEXT_PUBLIC_SUPABASE_URL</code> - Your Supabase project URL
+                </li>
+                <li>
+                  <code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code> - Your Supabase anonymous key
+                </li>
+                <li>
+                  <code>SUPABASE_SERVICE_ROLE_KEY</code> - Your Supabase service role key (optional)
+                </li>
+              </ul>
+            </div>
+
+            <div className="flex gap-2">
+              <Link href="/admin/setup/environment-check">
+                <Button variant="outline">Check Environment</Button>
+              </Link>
+              <Link href="/admin/setup/supabase-config">
+                <Button>Configure Supabase</Button>
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     )
   }

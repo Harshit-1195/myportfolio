@@ -169,6 +169,62 @@ export default function EmergencyAccess() {
     }
   }
 
+  const createDirectUser = async () => {
+    if (!email || !password) {
+      setError("Please enter email and password")
+      return
+    }
+
+    setLoading(true)
+    setError(null)
+
+    try {
+      // Try to create user directly via API
+      const response = await fetch("/api/admin/emergency-create-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to create user")
+      }
+
+      // Immediately try to sign in with the new credentials
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+
+      if (signInError) {
+        setError(`User created but login failed: ${signInError.message}. Try logging in manually.`)
+        return
+      }
+
+      if (signInData.user) {
+        setSuccess("Admin user created and logged in successfully! Redirecting...")
+        setTimeout(() => {
+          router.push("/admin/dashboard")
+        }, 2000)
+      } else {
+        setSuccess("Admin user created successfully! You can now log in manually.")
+        setStep("complete")
+      }
+    } catch (err: any) {
+      console.error("Direct user creation failed:", err)
+      setError(`Failed to create user: ${err.message}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen p-4">
       <Card className="w-full max-w-2xl bg-gray-800 border-gray-700">
@@ -316,6 +372,17 @@ export default function EmergencyAccess() {
                     )}
                   </Button>
                 </div>
+
+                <Button onClick={createDirectUser} disabled={loading} variant="secondary" className="w-full mt-2">
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Creating Direct...
+                    </>
+                  ) : (
+                    "Create Admin (Direct Method)"
+                  )}
+                </Button>
               </div>
             </div>
           )}
