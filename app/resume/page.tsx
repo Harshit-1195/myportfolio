@@ -832,524 +832,221 @@ export default function ResumePage() {
   return (
     <>
       <PageParticles />
-      <div className="container mx-auto py-28 px-4 max-w-6xl bg-black min-h-screen resume-page">
-        <div className="flex justify-between items-center mb-10">
-          <h1 className="text-3xl md:text-4xl font-bold text-white">Resume</h1>
-          <Button
-            variant="outline"
-            className="gap-2 glass-panel text-white border-white/20 hover:bg-white/10"
-            onClick={handleDownloadResume}
-            disabled={isDownloading}
-          >
-            <FileDown className="w-4 h-4" />
-            Download Resume
-          </Button>
-        </div>
+      <div className="min-h-screen bg-black">
+        {/* Mobile-optimized container */}
+        <div className="container mx-auto py-16 sm:py-20 md:py-28 px-3 sm:px-4 md:px-6 max-w-7xl resume-page">
+          {/* Header - Mobile responsive */}
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 md:mb-10">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white">Resume</h1>
+            <Button
+              variant="outline"
+              className="gap-2 glass-panel text-white border-white/20 hover:bg-white/10 w-full sm:w-auto text-sm sm:text-base"
+              onClick={handleDownloadResume}
+              disabled={isDownloading}
+            >
+              <FileDown className="w-4 h-4" />
+              Download Resume
+            </Button>
+          </div>
 
-        <ScrollRevealWrapper>
-          <div className="glass-panel p-8 rounded-lg mb-10">
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-2 text-white">Harshit Dabhi</h2>
-              <p className="text-white/70">Performance & Programmatic Manager</p>
-              <div className="flex flex-wrap gap-4 mt-4">
-                <div className="text-sm text-white/70">
-                  <span className="font-medium text-white">Email:</span> dabhiharshit11@gmail.com
+          <ScrollRevealWrapper>
+            {/* Personal Info - Mobile optimized */}
+            <div className="glass-panel p-4 sm:p-6 md:p-8 rounded-lg mb-8 md:mb-10">
+              <div className="mb-6 md:mb-8">
+                <h2 className="text-xl sm:text-2xl font-bold mb-2 text-white">Harshit Dabhi</h2>
+                <p className="text-white/70 text-sm sm:text-base">Performance & Programmatic Manager</p>
+                <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 mt-4">
+                  <div className="text-xs sm:text-sm text-white/70">
+                    <span className="font-medium text-white">Email:</span> dabhiharshit11@gmail.com
+                  </div>
+                  <div className="text-xs sm:text-sm text-white/70">
+                    <span className="font-medium text-white">Phone:</span> +971556453208
+                  </div>
+                  <div className="text-xs sm:text-sm text-white/70">
+                    <span className="font-medium text-white">Location:</span> Dubai, UAE
+                  </div>
                 </div>
-                <div className="text-sm text-white/70">
-                  <span className="font-medium text-white">Phone:</span> +971556453208
-                </div>
-                <div className="text-sm text-white/70">
-                  <span className="font-medium text-white">Location:</span> Dubai, UAE
-                </div>
+              </div>
+
+              <div className="mb-6 md:mb-8">
+                <h3 className="text-lg sm:text-xl font-semibold border-b border-white/20 pb-2 mb-4 text-white">
+                  Summary
+                </h3>
+                <p className="text-white/70 text-sm sm:text-base leading-relaxed">
+                  Experienced Performance & Programmatic Manager with over 8 years of expertise in digital marketing,
+                  media buying, and campaign optimization. Proven track record of managing global programmatic
+                  campaigns, collaborating with major DSPs, and achieving exceptional ROI across diverse industries.
+                  Skilled in data analysis, stakeholder reporting, and strategic media planning with a focus on
+                  performance-driven results.
+                </p>
               </div>
             </div>
 
-            <div className="mb-8">
-              <h3 className="text-xl font-semibold border-b border-white/20 pb-2 mb-4 text-white">Summary</h3>
-              <p className="text-white/70">
-                Experienced Performance & Programmatic Manager with over 8 years of expertise in digital marketing,
-                media buying, and campaign optimization. Proven track record of managing global programmatic campaigns,
-                collaborating with major DSPs, and achieving exceptional ROI across diverse industries. Skilled in data
-                analysis, stakeholder reporting, and strategic media planning with a focus on performance-driven
-                results.
-              </p>
-            </div>
-          </div>
+            {/* Professional Experience - Mobile optimized */}
+            <div className="mb-8 md:mb-10">
+              <h3 className="text-xl sm:text-2xl font-bold mb-4 md:mb-6 text-white">Professional Experience</h3>
 
-          <div className="mb-10">
-            <h3 className="text-2xl font-bold mb-6 text-white">Professional Experience</h3>
-
-            <div className="space-y-4">
-              {experiences.map((exp, index) => (
-                <div key={exp.id} className="timeline-content">
-                  <motion.div
-                    className="glass-panel p-6 rounded-lg hover-glow relative overflow-hidden"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{
-                      scale: 1.01,
-                      transition: { type: "spring", stiffness: 400, damping: 10 },
-                    }}
-                    whileTap={{ scale: 0.99 }}
-                  >
+              <div className="space-y-3 md:space-y-4">
+                {experiences.map((exp, index) => (
+                  <div key={exp.id} className="timeline-content">
                     <motion.div
-                      className="absolute inset-0 bg-white/5 z-0"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "0%" }}
-                      transition={{ duration: 0.3 }}
-                    />
-                    <div className="relative z-10">
-                      <div
-                        className="flex justify-between items-center cursor-pointer"
-                        onClick={() => toggleExperience(exp.id)}
-                      >
-                        <div>
-                          <h4 className="text-xl font-semibold mb-1 text-white">{exp.title}</h4>
-                          <div className="flex flex-wrap justify-between mb-3">
-                            <p className="font-medium text-white">{exp.company}</p>
-                            <p className="text-sm text-white/50 ml-4">{exp.period}</p>
-                          </div>
-                          <p className="text-sm text-white mb-3">{exp.location}</p>
-                        </div>
-                        <div className="text-white">
-                          {expandedExperience === exp.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                        </div>
-                      </div>
-
-                      {expandedExperience === exp.id && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
+                      className="glass-panel p-4 sm:p-6 rounded-lg hover-glow relative overflow-hidden"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      whileHover={{
+                        scale: 1.01,
+                        transition: { type: "spring", stiffness: 400, damping: 10 },
+                      }}
+                      whileTap={{ scale: 0.99 }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-white/5 z-0"
+                        initial={{ x: "-100%" }}
+                        whileHover={{ x: "0%" }}
+                        transition={{ duration: 0.3 }}
+                      />
+                      <div className="relative z-10">
+                        <div
+                          className="flex justify-between items-start cursor-pointer"
+                          onClick={() => toggleExperience(exp.id)}
                         >
-                          <ul className="list-disc list-inside space-y-1 text-sm text-white mt-4">
-                            {exp.description.map((item, i) => (
-                              <li key={i}>{item}</li>
-                            ))}
-                          </ul>
-                        </motion.div>
-                      )}
-                    </div>
-                  </motion.div>
-                </div>
-              ))}
-            </div>
-
-            <h3 className="text-2xl font-bold mb-6 mt-12 text-white">Entrepreneurial Experience</h3>
-            <div className="space-y-4">
-              {entrepreneurialExperiences.map((exp, index) => (
-                <div key={exp.id} className="timeline-content">
-                  <motion.div
-                    className="glass-panel p-6 rounded-lg hover-glow relative overflow-hidden"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: index * 0.1 }}
-                    whileHover={{
-                      scale: 1.01,
-                      transition: { type: "spring", stiffness: 400, damping: 10 },
-                    }}
-                    whileTap={{ scale: 0.99 }}
-                  >
-                    <motion.div
-                      className="absolute inset-0 bg-white/5 z-0"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "0%" }}
-                      transition={{ duration: 0.3 }}
-                    />
-                    <div className="relative z-10">
-                      <div
-                        className="flex justify-between items-center cursor-pointer"
-                        onClick={() => toggleEntrepreneurial(exp.id)}
-                      >
-                        <div>
-                          <h4 className="text-xl font-semibold mb-1 text-white">{exp.title}</h4>
-                          <div className="flex flex-wrap justify-between mb-3">
-                            <p className="font-medium text-white">{exp.company}</p>
-                            <p className="text-sm text-white/50 ml-4">{exp.period}</p>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-lg sm:text-xl font-semibold mb-1 text-white pr-2">{exp.title}</h4>
+                            <div className="flex flex-col sm:flex-row sm:justify-between mb-2 sm:mb-3">
+                              <p className="font-medium text-white text-sm sm:text-base">{exp.company}</p>
+                              <p className="text-xs sm:text-sm text-white/50">{exp.period}</p>
+                            </div>
+                            <p className="text-xs sm:text-sm text-white mb-3">{exp.location}</p>
                           </div>
-                          <p className="text-sm text-white mb-3">{exp.location}</p>
+                          <div className="text-white ml-2 flex-shrink-0">
+                            {expandedExperience === exp.id ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                          </div>
                         </div>
-                        <div className="text-white">
-                          {expandedEntrepreneurial === exp.id ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-                        </div>
-                      </div>
 
-                      {expandedEntrepreneurial === exp.id && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: "auto" }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          <ul className="list-disc list-inside space-y-1 text-sm text-white mt-4">
-                            {exp.description.map((item, i) => (
-                              <li key={i}>{item}</li>
-                            ))}
-                          </ul>
-                        </motion.div>
-                      )}
-                    </div>
-                  </motion.div>
-                </div>
-              ))}
-            </div>
-
-            {/* Certifications Section */}
-            <motion.div
-              id="certifications"
-              className="mt-12 pt-10 -mt-10" // Added padding-top and negative margin to account for fixed header
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-            >
-              <h3 className="text-2xl font-bold mb-6 text-white">Certifications</h3>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-                {certificates.slice(0, 10).map((cert, index) => (
-                  <motion.div
-                    key={index}
-                    className="glass-panel p-6 rounded-lg hover-glow relative overflow-hidden"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                    whileHover={{
-                      scale: 1.05,
-                      transition: { type: "spring", stiffness: 400, damping: 10 },
-                    }}
-                    whileTap={{ scale: 0.95 }}
-                  >
-                    <motion.div
-                      className="absolute inset-0 bg-white/5 z-0"
-                      initial={{ x: "-100%" }}
-                      whileHover={{ x: "0%" }}
-                      transition={{ duration: 0.3 }}
-                    />
-                    <div className="relative z-10">
-                      <div className="flex items-start mb-4">
-                        <div className="relative w-12 h-12 mr-4 flex-shrink-0 bg-white/10 rounded-md p-2">
-                          <Image
-                            src={cert.logo || "/placeholder.svg?height=48&width=48&query=logo"}
-                            alt={cert.organization}
-                            fill
-                            className="object-contain"
-                          />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-medium text-white">{cert.name}</h3>
-                          <p className="text-sm text-gray-300">{cert.organization}</p>
-                        </div>
-                      </div>
-
-                      <div className="mb-4 text-sm text-gray-300">
-                        <p>
-                          Issued {cert.issuedDate}
-                          {cert.expiryDate ? ` · Expires ${cert.expiryDate}` : ""}
-                        </p>
-                        {cert.credentialId && (
-                          <p className="text-xs text-gray-400">Credential ID {cert.credentialId}</p>
+                        {expandedExperience === exp.id && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
+                          >
+                            <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm text-white mt-4">
+                              {exp.description.map((item, i) => (
+                                <li key={i} className="leading-relaxed">
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          </motion.div>
                         )}
                       </div>
-
-                      <button
-                        onClick={() => setSelectedCertificate(cert)}
-                        className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors mb-4 flex items-center"
-                      >
-                        Show credential <ExternalLink className="ml-1 h-3 w-3" />
-                      </button>
-
-                      {cert.skills && cert.skills.length > 0 && (
-                        <div className="mt-auto">
-                          <p className="text-xs text-gray-400 mb-1">Skills:</p>
-                          <div className="flex flex-wrap gap-1">
-                            {cert.skills.slice(0, 3).map((skill, idx) => (
-                              <span key={idx} className="text-xs px-2 py-1 bg-gray-700/50 rounded-full text-gray-300">
-                                {skill}
-                              </span>
-                            ))}
-                            {cert.skills.length > 3 && (
-                              <span className="text-xs px-2 py-1 bg-gray-700/50 rounded-full text-gray-300">
-                                +{cert.skills.length - 3} more
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  </div>
                 ))}
               </div>
 
-              {certificates.length > 10 && (
-                <div className="flex justify-center mt-8">
-                  <Button
-                    onClick={() => setShowAllCertificates(true)}
-                    className="gap-2 glass-panel text-white border-white/20 hover:bg-white/10"
-                  >
-                    View All Certifications ({certificates.length})
-                    <ChevronDown className="w-4 h-4" />
-                  </Button>
-                </div>
-              )}
-            </motion.div>
-          </div>
-
-          <div className="mb-10">
-            <h3 className="text-2xl font-bold mb-6 text-white">Technical Skills</h3>
-            <motion.div
-              className="glass-panel p-6 rounded-lg"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <ul className="list-disc list-inside space-y-2 text-sm text-white/70">
-                <li>
-                  <span className="font-medium text-white">Programmatic Platforms:</span> DV360, Trade Desk, Amazon DSP,
-                  YAN Network, Quantcast, Smartyads, Outbrain, Stackadapt, Broadsign, CM360
-                </li>
-                <li>
-                  <span className="font-medium text-white">Media Channels:</span> CTV, DOOH, PDOOH, Display, Video,
-                  Social, Search, Native, Audio
-                </li>
-                <li>
-                  <span className="font-medium text-white">Analytics Tools:</span> GA4, Tableau, Salesforce, Microsoft
-                  Clarity, Adobe Analytics, ZOHO, Tag Manager
-                </li>
-                <li>
-                  <span className="font-medium text-white">Core Competencies:</span> Omnichannel Media Buying, Campaign
-                  Optimization, Audience Segmentation, Performance Marketing, Budget Management, Native Advertising,
-                  Social Media Advertising, Content Strategy
-                </li>
-                <li>
-                  <span className="font-medium text-white">Ad Serving Tools:</span> Google Search Ads, Meta Ads, TikTok
-                  Ads, Snapchat Ads, LinkedIn Ads, Twitter Ads Etc.
-                </li>
-                <li>
-                  <span className="font-medium text-white">Marketing Automation Tools:</span> Braze, Mailchimp, Hubspot,
-                  Zoho SalesIq.
-                </li>
-              </ul>
-            </motion.div>
-          </div>
-
-          <div className="mb-10">
-            <h3 className="text-2xl font-bold mb-6 text-white">Soft Skills</h3>
-            <motion.div
-              className="glass-panel p-6 rounded-lg"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <ul className="list-disc list-inside space-y-2 text-sm text-white/70">
-                <li>
-                  <span className="font-medium text-white">Leadership:</span> Team management, project leadership,
-                  stakeholder management, mentoring and development
-                </li>
-                <li>
-                  <span className="font-medium text-white">Communication:</span> Strong negotiation skills, client
-                  relationship management, cross-functional collaboration, presentation skills
-                </li>
-                <li>
-                  <span className="font-medium text-white">Strategic Thinking:</span> Problem-solving, analytical
-                  mindset, strategic planning, data-driven decision making
-                </li>
-                <li>
-                  <span className="font-medium text-white">Personal Qualities:</span> Results-oriented, adaptable,
-                  detail-oriented, proactive, innovative thinking
-                </li>
-                <li>
-                  <span className="font-medium text-white">Project Management:</span> Budget management, time
-                  management, resource allocation, risk assessment, bid management
-                </li>
-                <li>
-                  <span className="font-medium text-white">Cultural Awareness:</span> Experience working with global
-                  teams and diverse markets across MENA, EMEA, APAC regions
-                </li>
-              </ul>
-            </motion.div>
-          </div>
-
-          <div className="mb-10">
-            <h3 className="text-2xl font-bold mb-6 text-white">Key Skills</h3>
-            <motion.div
-              className="glass-panel p-6 rounded-lg"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="flex flex-wrap gap-2">
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">
-                  Multi-Channel Marketing
-                </span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Advertising Strategy</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Paid Media Strategy</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">
-                  Real-Time Bidding (RTB)
-                </span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Performance Management</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">
-                  Artificial Intelligence (AI)
-                </span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Pay Per Click (PPC)</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Digital Media</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">
-                  Programmatic Advertising
-                </span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Media Planning</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Brand Strategy</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Investment Strategies</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Budget Management</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Analytical Skills</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Media Buying</span>
-                <span className="glass-panel px-3 py-1 rounded-full text-sm text-white/80">Campaign Execution</span>
-              </div>
-            </motion.div>
-          </div>
-        </ScrollRevealWrapper>
-
-        {/* Certificate Lightbox */}
-        <AnimatePresence>
-          {selectedCertificate && (
-            <motion.div
-              className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedCertificate(null)}
-            >
-              <motion.div
-                className="bg-gray-900 border border-gray-700 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="p-6">
-                  <div className="flex justify-between items-start mb-6">
-                    <div className="flex items-center">
-                      <div className="relative w-16 h-16 mr-4 bg-white/10 rounded-md p-2">
-                        <Image
-                          src={selectedCertificate.logo || "/placeholder.svg?height=64&width=64&query=logo"}
-                          alt={selectedCertificate.organization}
-                          fill
-                          className="object-contain"
-                        />
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-white">{selectedCertificate.name}</h3>
-                        <p className="text-gray-300">{selectedCertificate.organization}</p>
-                      </div>
-                    </div>
-                    <button
-                      onClick={() => setSelectedCertificate(null)}
-                      className="text-gray-400 hover:text-white transition-colors"
+              {/* Entrepreneurial Experience - Mobile optimized */}
+              <h3 className="text-xl sm:text-2xl font-bold mb-4 md:mb-6 mt-8 md:mt-12 text-white">
+                Entrepreneurial Experience
+              </h3>
+              <div className="space-y-3 md:space-y-4">
+                {entrepreneurialExperiences.map((exp, index) => (
+                  <div key={exp.id} className="timeline-content">
+                    <motion.div
+                      className="glass-panel p-4 sm:p-6 rounded-lg hover-glow relative overflow-hidden"
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
+                      whileHover={{
+                        scale: 1.01,
+                        transition: { type: "spring", stiffness: 400, damping: 10 },
+                      }}
+                      whileTap={{ scale: 0.99 }}
                     >
-                      <X className="h-6 w-6" />
-                    </button>
-                  </div>
-
-                  <div className="bg-gray-800/50 p-6 rounded-lg mb-6 border border-gray-700">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <p className="text-sm text-gray-400">Issued Date</p>
-                        <p className="font-medium text-white">{selectedCertificate.issuedDate}</p>
-                      </div>
-                      {selectedCertificate.expiryDate && (
-                        <div>
-                          <p className="text-sm text-gray-400">Expiry Date</p>
-                          <p className="font-medium text-white">{selectedCertificate.expiryDate}</p>
+                      <motion.div
+                        className="absolute inset-0 bg-white/5 z-0"
+                        initial={{ x: "-100%" }}
+                        whileHover={{ x: "0%" }}
+                        transition={{ duration: 0.3 }}
+                      />
+                      <div className="relative z-10">
+                        <div
+                          className="flex justify-between items-start cursor-pointer"
+                          onClick={() => toggleEntrepreneurial(exp.id)}
+                        >
+                          <div className="flex-1 min-w-0">
+                            <h4 className="text-lg sm:text-xl font-semibold mb-1 text-white pr-2">{exp.title}</h4>
+                            <div className="flex flex-col sm:flex-row sm:justify-between mb-2 sm:mb-3">
+                              <p className="font-medium text-white text-sm sm:text-base">{exp.company}</p>
+                              <p className="text-xs sm:text-sm text-white/50">{exp.period}</p>
+                            </div>
+                            <p className="text-xs sm:text-sm text-white mb-3">{exp.location}</p>
+                          </div>
+                          <div className="text-white ml-2 flex-shrink-0">
+                            {expandedEntrepreneurial === exp.id ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+                          </div>
                         </div>
-                      )}
-                      {selectedCertificate.credentialId && (
-                        <div className="md:col-span-2">
-                          <p className="text-sm text-gray-400">Credential ID</p>
-                          <p className="font-medium text-white">{selectedCertificate.credentialId}</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
 
-                  {selectedCertificate.skills && selectedCertificate.skills.length > 0 && (
-                    <div className="mb-6">
-                      <h4 className="text-lg font-medium mb-2 flex items-center text-white">
-                        <Award className="h-5 w-5 mr-2 text-blue-400" />
-                        Skills
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        {selectedCertificate.skills.map((skill, idx) => (
-                          <span
-                            key={idx}
-                            className="px-3 py-1 bg-blue-900/50 text-blue-300 rounded-full border border-blue-800"
+                        {expandedEntrepreneurial === exp.id && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            transition={{ duration: 0.3 }}
                           >
-                            {skill}
-                          </span>
-                        ))}
+                            <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm text-white mt-4">
+                              {exp.description.map((item, i) => (
+                                <li key={i} className="leading-relaxed">
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          </motion.div>
+                        )}
                       </div>
-                    </div>
-                  )}
-
-                  {selectedCertificate.pdfUrl && (
-                    <div className="mt-6">
-                      <a
-                        href={selectedCertificate.pdfUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                      >
-                        View Certificate PDF <ExternalLink className="ml-2 h-4 w-4" />
-                      </a>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* All Certificates Lightbox */}
-        <AnimatePresence>
-          {showAllCertificates && (
-            <motion.div
-              className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4 backdrop-blur-sm"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowAllCertificates(false)}
-            >
-              <motion.div
-                className="bg-gray-900 border border-gray-700 rounded-lg w-full max-w-7xl max-h-[90vh] overflow-y-auto"
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
-                onClick={(e) => e.stopPropagation()}
-              >
-                <div className="p-6">
-                  <div className="flex justify-between items-center mb-6 sticky top-0 bg-gray-900 z-10 pb-4">
-                    <h3 className="text-2xl font-bold text-white">All Certifications ({certificates.length})</h3>
-                    <button
-                      onClick={() => setShowAllCertificates(false)}
-                      className="text-gray-400 hover:text-white transition-colors"
-                    >
-                      <X className="h-6 w-6" />
-                    </button>
+                    </motion.div>
                   </div>
+                ))}
+              </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {certificates.map((cert, index) => (
-                      <div
-                        key={index}
-                        className="bg-gray-800/50 p-6 rounded-lg border border-gray-700 hover:bg-gray-800 transition-colors"
-                      >
-                        <div className="flex items-start mb-4">
-                          <div className="relative w-12 h-12 mr-4 flex-shrink-0 bg-white/10 rounded-md p-2">
+              {/* Certifications Section - Mobile optimized */}
+              <motion.div
+                id="certifications"
+                className="mt-8 md:mt-12 pt-6 md:pt-10 -mt-6 md:-mt-10"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+              >
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 md:mb-6 text-white">Certifications</h3>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 max-w-7xl mx-auto">
+                  {certificates.slice(0, 8).map((cert, index) => (
+                    <motion.div
+                      key={index}
+                      className="glass-panel p-4 sm:p-6 rounded-lg hover-glow relative overflow-hidden"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ duration: 0.4, delay: index * 0.05 }}
+                      whileHover={{
+                        scale: 1.05,
+                        transition: { type: "spring", stiffness: 400, damping: 10 },
+                      }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      <motion.div
+                        className="absolute inset-0 bg-white/5 z-0"
+                        initial={{ x: "-100%" }}
+                        whileHover={{ x: "0%" }}
+                        transition={{ duration: 0.3 }}
+                      />
+                      <div className="relative z-10">
+                        <div className="flex items-start mb-3 sm:mb-4">
+                          <div className="relative w-10 h-10 sm:w-12 sm:h-12 mr-3 sm:mr-4 flex-shrink-0 bg-white/10 rounded-md p-1.5 sm:p-2">
                             <Image
                               src={cert.logo || "/placeholder.svg?height=48&width=48&query=logo"}
                               alt={cert.organization}
@@ -1357,28 +1054,25 @@ export default function ResumePage() {
                               className="object-contain"
                             />
                           </div>
-                          <div>
-                            <h4 className="text-lg font-medium text-white">{cert.name}</h4>
-                            <p className="text-sm text-gray-300">{cert.organization}</p>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="text-sm sm:text-lg font-medium text-white leading-tight">{cert.name}</h3>
+                            <p className="text-xs sm:text-sm text-gray-300 mt-1">{cert.organization}</p>
                           </div>
                         </div>
 
-                        <div className="mb-4 text-sm text-gray-300">
+                        <div className="mb-3 sm:mb-4 text-xs sm:text-sm text-gray-300">
                           <p>
                             Issued {cert.issuedDate}
                             {cert.expiryDate ? ` · Expires ${cert.expiryDate}` : ""}
                           </p>
                           {cert.credentialId && (
-                            <p className="text-xs text-gray-400">Credential ID {cert.credentialId}</p>
+                            <p className="text-xs text-gray-400 mt-1">Credential ID {cert.credentialId}</p>
                           )}
                         </div>
 
                         <button
-                          onClick={() => {
-                            setSelectedCertificate(cert)
-                            setShowAllCertificates(false)
-                          }}
-                          className="text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors mb-4 flex items-center"
+                          onClick={() => setSelectedCertificate(cert)}
+                          className="text-xs sm:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors mb-3 sm:mb-4 flex items-center"
                         >
                           Show credential <ExternalLink className="ml-1 h-3 w-3" />
                         </button>
@@ -1387,30 +1081,388 @@ export default function ResumePage() {
                           <div className="mt-auto">
                             <p className="text-xs text-gray-400 mb-1">Skills:</p>
                             <div className="flex flex-wrap gap-1">
-                              {cert.skills.slice(0, 3).map((skill, idx) => (
+                              {cert.skills.slice(0, 2).map((skill, idx) => (
                                 <span key={idx} className="text-xs px-2 py-1 bg-gray-700/50 rounded-full text-gray-300">
                                   {skill}
                                 </span>
                               ))}
-                              {cert.skills.length > 3 && (
+                              {cert.skills.length > 2 && (
                                 <span className="text-xs px-2 py-1 bg-gray-700/50 rounded-full text-gray-300">
-                                  +{cert.skills.length - 3} more
+                                  +{cert.skills.length - 2} more
                                 </span>
                               )}
                             </div>
                           </div>
                         )}
                       </div>
-                    ))}
-                  </div>
+                    </motion.div>
+                  ))}
                 </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
-        <FloatingActionButton />
-        <BackToHomeAlt />
+                {certificates.length > 8 && (
+                  <div className="flex justify-center mt-6 md:mt-8">
+                    <Button
+                      onClick={() => setShowAllCertificates(true)}
+                      className="gap-2 glass-panel text-white border-white/20 hover:bg-white/10 text-sm sm:text-base"
+                    >
+                      View All Certifications ({certificates.length})
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+              </motion.div>
+            </div>
+
+            {/* Skills Sections - Mobile optimized */}
+            <div className="space-y-6 md:space-y-10">
+              {/* Technical Skills */}
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 md:mb-6 text-white">Technical Skills</h3>
+                <motion.div
+                  className="glass-panel p-4 sm:p-6 rounded-lg"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <ul className="list-disc list-inside space-y-2 text-xs sm:text-sm text-white/70">
+                    <li>
+                      <span className="font-medium text-white">Programmatic Platforms:</span> DV360, Trade Desk, Amazon
+                      DSP, YAN Network, Quantcast, Smartyads, Outbrain, Stackadapt, Broadsign, CM360
+                    </li>
+                    <li>
+                      <span className="font-medium text-white">Media Channels:</span> CTV, DOOH, PDOOH, Display, Video,
+                      Social, Search, Native, Audio
+                    </li>
+                    <li>
+                      <span className="font-medium text-white">Analytics Tools:</span> GA4, Tableau, Salesforce,
+                      Microsoft Clarity, Adobe Analytics, ZOHO, Tag Manager
+                    </li>
+                    <li>
+                      <span className="font-medium text-white">Core Competencies:</span> Omnichannel Media Buying,
+                      Campaign Optimization, Audience Segmentation, Performance Marketing, Budget Management, Native
+                      Advertising, Social Media Advertising, Content Strategy
+                    </li>
+                    <li>
+                      <span className="font-medium text-white">Ad Serving Tools:</span> Google Search Ads, Meta Ads,
+                      TikTok Ads, Snapchat Ads, LinkedIn Ads, Twitter Ads Etc.
+                    </li>
+                    <li>
+                      <span className="font-medium text-white">Marketing Automation Tools:</span> Braze, Mailchimp,
+                      Hubspot, Zoho SalesIQ.
+                    </li>
+                  </ul>
+                </motion.div>
+              </div>
+
+              {/* Soft Skills */}
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 md:mb-6 text-white">Soft Skills</h3>
+                <motion.div
+                  className="glass-panel p-4 sm:p-6 rounded-lg"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <ul className="list-disc list-inside space-y-2 text-xs sm:text-sm text-white/70">
+                    <li>
+                      <span className="font-medium text-white">Leadership:</span> Team management, project leadership,
+                      stakeholder management, mentoring and development
+                    </li>
+                    <li>
+                      <span className="font-medium text-white">Communication:</span> Strong negotiation skills, client
+                      relationship management, cross-functional collaboration, presentation skills
+                    </li>
+                    <li>
+                      <span className="font-medium text-white">Strategic Thinking:</span> Problem-solving, analytical
+                      mindset, strategic planning, data-driven decision making
+                    </li>
+                    <li>
+                      <span className="font-medium text-white">Personal Qualities:</span> Results-oriented, adaptable,
+                      detail-oriented, proactive, innovative thinking
+                    </li>
+                    <li>
+                      <span className="font-medium text-white">Project Management:</span> Budget management, time
+                      management, resource allocation, risk assessment, bid management
+                    </li>
+                    <li>
+                      <span className="font-medium text-white">Cultural Awareness:</span> Experience working with global
+                      teams and diverse markets across MENA, EMEA, APAC regions
+                    </li>
+                  </ul>
+                </motion.div>
+              </div>
+
+              {/* Key Skills */}
+              <div>
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 md:mb-6 text-white">Key Skills</h3>
+                <motion.div
+                  className="glass-panel p-4 sm:p-6 rounded-lg"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="flex flex-wrap gap-2">
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Multi-Channel Marketing
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Advertising Strategy
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Paid Media Strategy
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Real-Time Bidding (RTB)
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Performance Management
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Artificial Intelligence (AI)
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Pay Per Click (PPC)
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Digital Media
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Programmatic Advertising
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Media Planning
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Brand Strategy
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Investment Strategies
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Budget Management
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Analytical Skills
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Media Buying
+                    </span>
+                    <span className="glass-panel px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm text-white/80">
+                      Campaign Execution
+                    </span>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          </ScrollRevealWrapper>
+
+          {/* Certificate Lightbox - Mobile optimized */}
+          <AnimatePresence>
+            {selectedCertificate && (
+              <motion.div
+                className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setSelectedCertificate(null)}
+              >
+                <motion.div
+                  className="bg-gray-900 border border-gray-700 rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="p-4 sm:p-6">
+                    <div className="flex justify-between items-start mb-4 sm:mb-6">
+                      <div className="flex items-center flex-1 min-w-0">
+                        <div className="relative w-12 h-12 sm:w-16 sm:h-16 mr-3 sm:mr-4 bg-white/10 rounded-md p-2">
+                          <Image
+                            src={selectedCertificate.logo || "/placeholder.svg?height=64&width=64&query=logo"}
+                            alt={selectedCertificate.organization}
+                            fill
+                            className="object-contain"
+                          />
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <h3 className="text-lg sm:text-xl font-bold text-white leading-tight">
+                            {selectedCertificate.name}
+                          </h3>
+                          <p className="text-sm sm:text-base text-gray-300">{selectedCertificate.organization}</p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setSelectedCertificate(null)}
+                        className="text-gray-400 hover:text-white transition-colors ml-2 flex-shrink-0"
+                      >
+                        <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                      </button>
+                    </div>
+
+                    <div className="bg-gray-800/50 p-4 sm:p-6 rounded-lg mb-4 sm:mb-6 border border-gray-700">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-sm text-gray-400">Issued Date</p>
+                          <p className="font-medium text-white">{selectedCertificate.issuedDate}</p>
+                        </div>
+                        {selectedCertificate.expiryDate && (
+                          <div>
+                            <p className="text-sm text-gray-400">Expiry Date</p>
+                            <p className="font-medium text-white">{selectedCertificate.expiryDate}</p>
+                          </div>
+                        )}
+                        {selectedCertificate.credentialId && (
+                          <div className="md:col-span-2">
+                            <p className="text-sm text-gray-400">Credential ID</p>
+                            <p className="font-medium text-white break-all">{selectedCertificate.credentialId}</p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {selectedCertificate.skills && selectedCertificate.skills.length > 0 && (
+                      <div className="mb-4 sm:mb-6">
+                        <h4 className="text-base sm:text-lg font-medium mb-2 flex items-center text-white">
+                          <Award className="h-4 w-4 sm:h-5 sm:w-5 mr-2 text-blue-400" />
+                          Skills
+                        </h4>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedCertificate.skills.map((skill, idx) => (
+                            <span
+                              key={idx}
+                              className="px-2 sm:px-3 py-1 bg-blue-900/50 text-blue-300 rounded-full border border-blue-800 text-xs sm:text-sm"
+                            >
+                              {skill}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedCertificate.pdfUrl && (
+                      <div className="mt-4 sm:mt-6">
+                        <a
+                          href={selectedCertificate.pdfUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-3 sm:px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                        >
+                          View Certificate PDF <ExternalLink className="ml-2 h-3 w-3 sm:h-4 sm:w-4" />
+                        </a>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* All Certificates Lightbox - Mobile optimized */}
+          <AnimatePresence>
+            {showAllCertificates && (
+              <motion.div
+                className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-3 sm:p-4 backdrop-blur-sm"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setShowAllCertificates(false)}
+              >
+                <motion.div
+                  className="bg-gray-900 border border-gray-700 rounded-lg w-full max-w-7xl max-h-[90vh] overflow-y-auto"
+                  initial={{ scale: 0.9, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0.9, opacity: 0 }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="p-4 sm:p-6">
+                    <div className="flex justify-between items-center mb-4 sm:mb-6 sticky top-0 bg-gray-900 z-10 pb-4">
+                      <h3 className="text-xl sm:text-2xl font-bold text-white">
+                        All Certifications ({certificates.length})
+                      </h3>
+                      <button
+                        onClick={() => setShowAllCertificates(false)}
+                        className="text-gray-400 hover:text-white transition-colors"
+                      >
+                        <X className="h-5 w-5 sm:h-6 sm:w-6" />
+                      </button>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+                      {certificates.map((cert, index) => (
+                        <div
+                          key={index}
+                          className="bg-gray-800/50 p-4 sm:p-6 rounded-lg border border-gray-700 hover:bg-gray-800 transition-colors"
+                        >
+                          <div className="flex items-start mb-3 sm:mb-4">
+                            <div className="relative w-10 h-10 sm:w-12 sm:h-12 mr-3 sm:mr-4 flex-shrink-0 bg-white/10 rounded-md p-1.5 sm:p-2">
+                              <Image
+                                src={cert.logo || "/placeholder.svg?height=48&width=48&query=logo"}
+                                alt={cert.organization}
+                                fill
+                                className="object-contain"
+                              />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <h4 className="text-sm sm:text-lg font-medium text-white leading-tight">{cert.name}</h4>
+                              <p className="text-xs sm:text-sm text-gray-300 mt-1">{cert.organization}</p>
+                            </div>
+                          </div>
+
+                          <div className="mb-3 sm:mb-4 text-xs sm:text-sm text-gray-300">
+                            <p>
+                              Issued {cert.issuedDate}
+                              {cert.expiryDate ? ` · Expires ${cert.expiryDate}` : ""}
+                            </p>
+                            {cert.credentialId && (
+                              <p className="text-xs text-gray-400 mt-1 break-all">Credential ID {cert.credentialId}</p>
+                            )}
+                          </div>
+
+                          <button
+                            onClick={() => {
+                              setSelectedCertificate(cert)
+                              setShowAllCertificates(false)
+                            }}
+                            className="text-xs sm:text-sm font-medium text-blue-400 hover:text-blue-300 transition-colors mb-3 sm:mb-4 flex items-center"
+                          >
+                            Show credential <ExternalLink className="ml-1 h-3 w-3" />
+                          </button>
+
+                          {cert.skills && cert.skills.length > 0 && (
+                            <div className="mt-auto">
+                              <p className="text-xs text-gray-400 mb-1">Skills:</p>
+                              <div className="flex flex-wrap gap-1">
+                                {cert.skills.slice(0, 3).map((skill, idx) => (
+                                  <span
+                                    key={idx}
+                                    className="text-xs px-2 py-1 bg-gray-700/50 rounded-full text-gray-300"
+                                  >
+                                    {skill}
+                                  </span>
+                                ))}
+                                {cert.skills.length > 3 && (
+                                  <span className="text-xs px-2 py-1 bg-gray-700/50 rounded-full text-gray-300">
+                                    +{cert.skills.length - 3} more
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <FloatingActionButton />
+          <BackToHomeAlt />
+        </div>
       </div>
     </>
   )
