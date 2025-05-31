@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
     const path = folder ? `${folder}/${file.name}` : file.name
 
     // Upload to Supabase Storage
-    const result = await uploadFile(file, "assets", path)
+    const result = await uploadFile(file, "assets", path) // Uses "assets" bucket by default, not "media"
 
     return NextResponse.json({
       success: true,

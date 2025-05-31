@@ -14,10 +14,10 @@ interface SEOFieldsProps {
   description: string
   canonicalUrl: string
   ogImage: string | null
-  contentTitle: string // The main content title to use as a base
-  contentExcerpt: string // The main content excerpt to use as a base
-  slug: string // The content slug
-  baseUrl: string // The base URL for the content type (e.g., "/blog/")
+  contentTitle: string
+  contentExcerpt: string
+  slug: string
+  baseUrl: string
   onUpdate: (fields: {
     seoTitle: string
     seoDescription: string
@@ -45,7 +45,6 @@ export function SEOFields({
   // Generate SEO title based on content title
   const generateSeoTitle = () => {
     if (!contentTitle) return
-    // Typically SEO titles should be 50-60 characters
     let generatedTitle = contentTitle
     if (generatedTitle.length > 60) {
       generatedTitle = generatedTitle.substring(0, 57) + "..."
@@ -57,7 +56,6 @@ export function SEOFields({
   // Generate SEO description based on content excerpt
   const generateSeoDescription = () => {
     if (!contentExcerpt) return
-    // Meta descriptions should be 150-160 characters
     let generatedDescription = contentExcerpt
     if (generatedDescription.length > 160) {
       generatedDescription = generatedDescription.substring(0, 157) + "..."
@@ -69,7 +67,7 @@ export function SEOFields({
   // Generate canonical URL based on slug
   const generateCanonicalUrl = () => {
     if (!slug) return
-    const url = `${window.location.origin}${baseUrl}${slug}`
+    const url = `https://harshitdabhi.com${baseUrl}${slug}`
     setSeoCanonicalUrl(url)
     handleUpdate({ canonicalUrl: url })
   }
@@ -199,7 +197,7 @@ export function SEOFields({
               setSeoCanonicalUrl(e.target.value)
               handleUpdate({ canonicalUrl: e.target.value })
             }}
-            placeholder="https://yourdomain.com/content-path"
+            placeholder="https://harshitdabhi.com/blog/your-post"
             className="bg-gray-700 border-gray-600 text-white"
           />
         </div>
@@ -240,7 +238,7 @@ export function SEOFields({
               </div>
             </div>
           ) : (
-            <FileUpload bucket="assets" folder="og-images" accept="image/*" onUploadComplete={handleImageUpload} />
+            <FileUpload onUploadComplete={handleImageUpload} />
           )}
           <p className="text-xs text-gray-400">Recommended size: 1200×630 pixels</p>
         </div>
@@ -252,7 +250,7 @@ export function SEOFields({
               {seoTitle || "Your SEO Title Will Appear Here"}
             </div>
             <div className="text-green-500 text-xs line-clamp-1">
-              {seoCanonicalUrl || "https://yourdomain.com/your-page"}
+              {seoCanonicalUrl || "https://harshitdabhi.com/blog/your-post"}
             </div>
             <div className="text-gray-400 text-sm line-clamp-2">
               {seoDescription ||

@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Loader2, Save, ArrowLeft, ImageIcon, Globe, Github } from "lucide-react"
 import { Markdown } from "@/components/markdown"
+import { MediaLibraryModal } from "@/components/media-library-modal"
 
 export default function NewProjectPage() {
   const router = useRouter()
@@ -39,6 +40,7 @@ export default function NewProjectPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [previewTab, setPreviewTab] = useState("edit")
+  const [showMediaSelector, setShowMediaSelector] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -342,7 +344,7 @@ export default function NewProjectPage() {
                       type="button"
                       variant="outline"
                       className="shrink-0"
-                      onClick={() => router.push("/admin/media")}
+                      onClick={() => setShowMediaSelector(true)}
                     >
                       <ImageIcon className="h-4 w-4" />
                     </Button>
@@ -408,6 +410,19 @@ export default function NewProjectPage() {
           </div>
         </div>
       </form>
+      {/* Media Selector Modal */}
+      {showMediaSelector && (
+        <MediaLibraryModal
+          isOpen={showMediaSelector}
+          onClose={() => setShowMediaSelector(false)}
+          onSelect={(url) => {
+            setFormData((prev) => ({ ...prev, featured_image: url }))
+            setShowMediaSelector(false)
+          }}
+          accept="image/*"
+          multiple={false}
+        />
+      )}
     </div>
   )
 }

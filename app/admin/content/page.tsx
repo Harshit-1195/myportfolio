@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Badge } from "@/components/ui/badge"
-import { Save, RefreshCw, AlertCircle, CheckCircle, Edit, EyeOff, GripVertical, Plus } from "lucide-react"
+import { Save, RefreshCw, AlertCircle, CheckCircle, Edit, EyeOff, GripVertical, Plus, Database } from "lucide-react"
 
 interface ContentSection {
   id: string
@@ -45,6 +45,7 @@ export default function ContentManagementPage() {
   const [pageContent, setPageContent] = useState<PageContent[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [creating, setCreating] = useState(false)
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null)
   const [activeTab, setActiveTab] = useState("homepage")
   const [editingSection, setEditingSection] = useState<string | null>(null)
@@ -52,6 +53,41 @@ export default function ContentManagementPage() {
   useEffect(() => {
     loadAllContent()
   }, [])
+
+  const createCMSTables = async () => {
+    setCreating(true)
+    try {
+      console.log("Creating CMS tables...")
+
+      const response = await fetch("/api/cms/create-tables", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+
+      if (response.ok) {
+        setMessage({ type: "success", text: "CMS tables created successfully!" })
+        setTimeout(() => {
+          loadAllContent()
+        }, 1000)
+      } else {
+        const errorData = await response.json()
+        setMessage({
+          type: "error",
+          text: `Failed to create CMS tables: ${errorData.error || response.statusText}`,
+        })
+      }
+    } catch (error) {
+      console.error("Error creating CMS tables:", error)
+      setMessage({
+        type: "error",
+        text: `Failed to create CMS tables: ${error instanceof Error ? error.message : "Unknown error"}`,
+      })
+    } finally {
+      setCreating(false)
+    }
+  }
 
   const loadAllContent = async () => {
     setLoading(true)
@@ -74,78 +110,47 @@ export default function ContentManagementPage() {
       // Handle sections
       if (sectionsResponse.ok) {
         const sectionsData = await sectionsResponse.json()
-        setContentSections(sectionsData || [])
+        setContentSections(Array.isArray(sectionsData) ? sectionsData : [])
         console.log("Loaded sections:", sectionsData?.length || 0)
       } else {
         console.error("Error loading sections:", sectionsResponse.statusText)
-        setMessage({ type: "error", text: `Failed to load sections: ${sectionsResponse.statusText}` })
+        setContentSections([])
       }
 
       // Handle menus
       if (menusResponse.ok) {
         const menusData = await menusResponse.json()
-        setNavigationMenus(menusData || [])
+        setNavigationMenus(Array.isArray(menusData) ? menusData : [])
         console.log("Loaded menus:", menusData?.length || 0)
       } else {
         console.error("Error loading menus:", menusResponse.statusText)
+        setNavigationMenus([])
       }
 
       // Handle pages
       if (pagesResponse.ok) {
         const pagesData = await pagesResponse.json()
-        setPageContent(pagesData || [])
+        setPageContent(Array.isArray(pagesData) ? pagesData : [])
         console.log("Loaded pages:", pagesData?.length || 0)
       } else {
         console.error("Error loading pages:", pagesResponse.statusText)
+        setPageContent([])
       }
 
-      // If no sections exist, show option to create default content
-      if (sectionsResponse.ok) {
-        const sectionsData = await sectionsResponse.json()
-        if (!sectionsData || sectionsData.length === 0) {
-          console.log("No sections found")
-        }
+      // Show success message if we have content
+      const totalItems = contentSections.length + navigationMenus.length + pageContent.length
+      if (totalItems > 0) {
+        setMessage({
+          type: "success",
+          text: `Content loaded successfully! Found ${contentSections.length} sections, ${navigationMenus.length} menus, and ${pageContent.length} pages.`,
+        })
+        setTimeout(() => setMessage(null), 5000)
       }
     } catch (error) {
       console.error("Error loading content:", error)
       setMessage({ type: "error", text: "Failed to load content. Check console for details." })
     } finally {
       setLoading(false)
-    }
-  }
-
-  const createDefaultContent = async () => {
-    try {
-      console.log("Creating default content...")
-      setSaving(true)
-
-      const response = await fetch("/api/cms/create-default-content", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-
-      if (response.ok) {
-        setMessage({ type: "success", text: "Default content created successfully!" })
-        setTimeout(() => {
-          loadAllContent()
-        }, 1000)
-      } else {
-        const errorData = await response.json()
-        setMessage({
-          type: "error",
-          text: `Failed to create default content: ${errorData.error || response.statusText}`,
-        })
-      }
-    } catch (error) {
-      console.error("Error creating default content:", error)
-      setMessage({
-        type: "error",
-        text: `Failed to create default content: ${error instanceof Error ? error.message : "Unknown error"}`,
-      })
-    } finally {
-      setSaving(false)
     }
   }
 
@@ -301,6 +306,9 @@ export default function ContentManagementPage() {
     )
   }
 
+  // Check if we have no content at all
+  const hasNoContent = contentSections.length === 0 && navigationMenus.length === 0 && pageContent.length === 0
+
   return (
     <div className="container mx-auto py-28 px-4 max-w-6xl">
       <div className="flex justify-between items-center mb-6">
@@ -308,10 +316,18 @@ export default function ContentManagementPage() {
           <h1 className="text-3xl font-bold text-white">Content Management</h1>
           <p className="text-gray-400 mt-1">Edit all content across your website</p>
         </div>
-        <Button onClick={loadAllContent} variant="outline">
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Refresh
-        </Button>
+        <div className="flex items-center space-x-2">
+          {hasNoContent && (
+            <Button onClick={createCMSTables} disabled={creating} variant="default">
+              <Database className="h-4 w-4 mr-2" />
+              {creating ? "Creating Tables..." : "Setup CMS"}
+            </Button>
+          )}
+          <Button onClick={loadAllContent} variant="outline">
+            <RefreshCw className="h-4 w-4 mr-2" />
+            Refresh
+          </Button>
+        </div>
       </div>
 
       {message && (
@@ -344,22 +360,16 @@ export default function ContentManagementPage() {
           <div className="space-y-6">
             <div className="flex justify-between items-center">
               <h2 className="text-xl font-semibold text-white">Homepage Sections</h2>
-              <div className="flex items-center space-x-2">
-                <p className="text-sm text-gray-400">Click Edit to modify sections</p>
-                <Button onClick={createDefaultContent} variant="outline" size="sm" disabled={saving}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  {saving ? "Creating..." : "Add Default Content"}
-                </Button>
-              </div>
+              <p className="text-sm text-gray-400">Click Edit to modify sections</p>
             </div>
 
             {contentSections.filter((section) => section.page === "homepage").length === 0 ? (
               <Card className="bg-gray-800 border-gray-700">
                 <CardContent className="text-center py-12">
                   <p className="text-gray-400 mb-4">No homepage sections found.</p>
-                  <Button onClick={createDefaultContent} disabled={saving}>
+                  <Button onClick={createCMSTables} disabled={creating}>
                     <Plus className="h-4 w-4 mr-2" />
-                    {saving ? "Creating Default Content..." : "Create Default Homepage Content"}
+                    {creating ? "Creating..." : "Create Default Sections"}
                   </Button>
                 </CardContent>
               </Card>

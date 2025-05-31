@@ -23,6 +23,10 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Ensure canonical URL is set
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://yourdomain.com"
+    const canonicalUrl = body.canonical_url || `${baseUrl}/blog/${body.slug}`
+
     const post = await createBlogPost({
       title: body.title,
       slug: body.slug,
@@ -35,6 +39,10 @@ export async function POST(request: NextRequest) {
       published_at: body.is_published ? new Date().toISOString() : null,
       is_published: body.is_published || false,
       views: 0,
+      seo_title: body.seo_title || body.title,
+      seo_description: body.seo_description || body.excerpt,
+      canonical_url: canonicalUrl,
+      og_image: body.og_image || body.featured_image,
     })
 
     if (!post) {

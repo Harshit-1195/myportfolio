@@ -5,6 +5,8 @@ export async function POST() {
   try {
     const supabase = getSupabaseClient()
 
+    console.log("Creating default content...")
+
     // Create default homepage sections
     const defaultSections = [
       {
@@ -98,71 +100,26 @@ export async function POST() {
 
     // Insert sections
     for (const section of defaultSections) {
-      const { error } = await supabase.from("content_sections").insert(section)
+      console.log("Inserting section:", section.section_key)
+
+      const { error } = await supabase.from("content_sections").upsert(section, { onConflict: "section_key" })
+
       if (error) {
         console.error(`Error creating section ${section.section_key}:`, error)
-        return NextResponse.json({ error: `Failed to create ${section.section_name}` }, { status: 500 })
+        return NextResponse.json(
+          { error: `Failed to create ${section.section_name}: ${error.message}` },
+          { status: 500 },
+        )
       }
     }
 
-    // Create default navigation menus
-    const defaultMenus = [
-      {
-        menu_key: "main_nav",
-        menu_name: "Main Navigation",
-        items: [
-          { label: "Home", href: "/", order: 1 },
-          { label: "Resume", href: "/resume", order: 2 },
-          { label: "My Work", href: "/work", order: 3 },
-          { label: "Blog", href: "/blog", order: 4 },
-          { label: "Podcast", href: "/podcast", order: 5 },
-          { label: "Contact", href: "/contact", order: 6 },
-        ],
-        is_active: true,
-      },
-    ]
-
-    for (const menu of defaultMenus) {
-      const { error } = await supabase.from("navigation_menus").insert(menu)
-      if (error) {
-        console.error(`Error creating menu ${menu.menu_key}:`, error)
-      }
-    }
-
-    // Create default page content
-    const defaultPages = [
-      {
-        page_slug: "contact",
-        page_title: "Contact",
-        content: {
-          hero: {
-            title: "Get In Touch",
-            description: "Ready to discuss your next digital marketing project? I'd love to hear from you.",
-          },
-          contact_info: {
-            email: "dabhiharshit11@gmail.com",
-            phone: "+971556453208",
-            location: "Dubai, UAE",
-            availability: "Available for freelance and full-time opportunities",
-          },
-        },
-        meta_title: "Contact - Harshit Dabhi",
-        meta_description:
-          "Get in touch with Harshit Dabhi for digital marketing consultation and collaboration opportunities.",
-        is_published: true,
-      },
-    ]
-
-    for (const page of defaultPages) {
-      const { error } = await supabase.from("page_content").insert(page)
-      if (error) {
-        console.error(`Error creating page ${page.page_slug}:`, error)
-      }
-    }
-
+    console.log("Default content created successfully")
     return NextResponse.json({ success: true, message: "Default content created successfully" })
   } catch (error) {
     console.error("Error creating default content:", error)
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 })
+    return NextResponse.json(
+      { error: `Failed to create default content: ${error instanceof Error ? error.message : "Unknown error"}` },
+      { status: 500 },
+    )
   }
 }

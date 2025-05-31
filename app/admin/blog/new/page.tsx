@@ -106,6 +106,14 @@ export default function NewBlogPost() {
         throw new Error("Title and content are required")
       }
 
+      // In preview mode, just simulate success
+      if (process.env.NODE_ENV === "development" || !process.env.NEXT_PUBLIC_SUPABASE_URL) {
+        // Simulate API delay
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        router.push("/admin/blog")
+        return
+      }
+
       // Create the blog post
       const { error } = await supabase.from("blog_posts").insert([
         {
@@ -130,6 +138,15 @@ export default function NewBlogPost() {
 
   return (
     <div>
+      {(process.env.NODE_ENV === "development" || !process.env.NEXT_PUBLIC_SUPABASE_URL) && (
+        <div className="mb-6 p-4 bg-yellow-900/50 border border-yellow-800 rounded-md text-yellow-300">
+          <p className="font-medium">Preview Mode</p>
+          <p className="text-sm">
+            Running in preview mode with simulated functionality. Database operations will work in production.
+          </p>
+        </div>
+      )}
+
       <div className="mb-6">
         <Link href="/admin/blog" className="inline-flex items-center gap-1 text-gray-400 hover:text-white">
           <ArrowLeft size={16} />

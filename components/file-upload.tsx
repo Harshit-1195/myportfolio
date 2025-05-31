@@ -12,9 +12,15 @@ import { Alert, AlertDescription } from "@/components/ui/alert"
 
 interface FileUploadProps {
   onUploadComplete?: (mediaItem: any) => void
+  accept?: string
+  folder?: string
 }
 
-export function FileUpload({ onUploadComplete }: FileUploadProps) {
+export function FileUpload({
+  onUploadComplete,
+  accept = "image/jpeg,image/jpg,image/png,image/webp,application/pdf",
+  folder = "uploads",
+}: FileUploadProps) {
   const [file, setFile] = useState<File | null>(null)
   const [altText, setAltText] = useState("")
   const [caption, setCaption] = useState("")
@@ -25,7 +31,22 @@ export function FileUpload({ onUploadComplete }: FileUploadProps) {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0])
+      const selectedFile = e.target.files[0]
+
+      // Validate file type
+      const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp", "application/pdf"]
+      if (!allowedTypes.includes(selectedFile.type)) {
+        setError("Please select a valid file type: JPG, PNG, WebP, or PDF")
+        return
+      }
+
+      // Validate file size (10MB max)
+      if (selectedFile.size > 10 * 1024 * 1024) {
+        setError("File size must be less than 10MB")
+        return
+      }
+
+      setFile(selectedFile)
       setError(null)
       setSuccess(false)
     }
@@ -45,7 +66,7 @@ export function FileUpload({ onUploadComplete }: FileUploadProps) {
       // Generate a unique filename
       const fileExt = file.name.split(".").pop()
       const fileName = `${Date.now()}_${Math.random().toString(36).substring(2, 15)}.${fileExt}`
-      const filePath = `uploads/${fileName}`
+      const filePath = `${folder}/${fileName}`
 
       // Upload to Supabase Storage
       const fileUrl = await uploadFile(file, filePath)
@@ -63,7 +84,7 @@ export function FileUpload({ onUploadComplete }: FileUploadProps) {
         mime_type: file.type,
         alt_text: altText || null,
         caption: caption || null,
-        width: null, // Could add image dimension detection here
+        width: null,
         height: null,
       })
 
@@ -81,9 +102,9 @@ export function FileUpload({ onUploadComplete }: FileUploadProps) {
         fileInputRef.current.value = ""
       }
 
-      // Callback
+      // Callback with the file URL for immediate use
       if (onUploadComplete) {
-        onUploadComplete(mediaItem)
+        onUploadComplete({ url: fileUrl, ...mediaItem })
       }
     } catch (err) {
       console.error("Upload error:", err)
@@ -110,8 +131,9 @@ export function FileUpload({ onUploadComplete }: FileUploadProps) {
       )}
 
       <div className="space-y-2">
-        <Label htmlFor="file">File</Label>
-        <Input id="file" type="file" ref={fileInputRef} onChange={handleFileChange} />
+        <Label htmlFor="file">File (JPG, PNG, WebP, PDF)</Label>
+        <Input id="file" type="file" ref={fileInputRef} onChange={handleFileChange} accept={accept} />
+        <p className="text-xs text-gray-400">Supported formats: JPG, PNG, WebP, PDF (max 10MB)</p>
       </div>
 
       {file && (
