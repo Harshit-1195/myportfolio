@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { FileText, FolderOpen, Upload, AlertCircle, Settings } from "lucide-react"
 import Link from "next/link"
-import { checkSupabaseConfig } from "@/lib/supabase"
+import { getSupabaseClientComponent, checkSupabaseConfig } from "@/lib/supabase"
 
 export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null)
@@ -19,28 +19,23 @@ export default function AdminDashboard() {
     const fetchData = async () => {
       setLoading(true)
       try {
-        // Check Supabase configuration first
         const config = checkSupabaseConfig()
-
         if (!config.isConfigured) {
           setConfigError(
-            `Missing Supabase configuration: ${!config.hasUrl ? "URL " : ""}${!config.hasAnonKey ? "ANON_KEY" : ""}`,
+            `Missing Supabase configuration: ${!config.hasUrl ? "URL " : ""}${!config.hasAnonKey ? "ANON_KEY" : ""}`
           )
           setLoading(false)
           return
         }
 
-        // Try to import and use Supabase
-        const { getSupabaseClient, getAllBlogPosts, getAllProjects } = await import("@/lib/supabase")
-        const { getAllBlogPosts: getBlogPosts, getAllProjects: getProjects } = await import("@/lib/cms-service")
-
-        const supabase = getSupabaseClient()
+        const supabase = getSupabaseClientComponent()
         const {
           data: { user },
         } = await supabase.auth.getUser()
         setUser(user)
 
-        // Get counts with fallback
+        const { getAllBlogPosts: getBlogPosts, getAllProjects: getProjects } = await import("@/lib/cms-service")
+
         try {
           const blogPosts = await getBlogPosts()
           const projects = await getProjects()
