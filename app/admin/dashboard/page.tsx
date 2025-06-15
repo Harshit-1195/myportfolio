@@ -10,7 +10,7 @@ import { getSupabaseClientComponent, checkSupabaseConfig } from "@/lib/supabase"
 
 export default function AdminDashboard() {
   const [user, setUser] = useState<any>(null)
-  const [blogCount, setBlogCount] = useState(0)
+  const [blogCount, setBlogCount] = useState(0) 
   const [projectCount, setProjectCount] = useState(0)
   const [loading, setLoading] = useState(true)
   const [configError, setConfigError] = useState<string | null>(null)
@@ -48,7 +48,7 @@ export default function AdminDashboard() {
         }
       } catch (error) {
         console.error("Error fetching dashboard data:", error)
-        setConfigError(error.message || "Failed to initialize dashboard")
+        // setConfigError(error.message || "Failed to initialize dashboard")
       } finally {
         setLoading(false)
       }

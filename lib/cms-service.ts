@@ -232,7 +232,7 @@ export async function deleteProject(slug: string): Promise<boolean> {
 // Media functions
 export async function getAllMedia(): Promise<Media[]> {
   const supabase = getSupabaseClient()
-  const { data, error } = await supabase.from("media").select("*").order("created_at", { ascending: false })
+  const { data, error } = await supabase.from("assets").select("*").order("created_at", { ascending: false })
 
   if (error) {
     console.error("Error fetching media:", error)
@@ -244,7 +244,7 @@ export async function getAllMedia(): Promise<Media[]> {
 
 export async function getMediaById(id: string): Promise<Media | null> {
   const supabase = getSupabaseClient()
-  const { data, error } = await supabase.from("media").select("*").eq("id", id).single()
+  const { data, error } = await supabase.from("assets").select("*").eq("id", id).single()
 
   if (error) {
     console.error(`Error fetching media with id ${id}:`, error)
@@ -278,26 +278,25 @@ export async function deleteMedia(id: string): Promise<boolean> {
   return true
 }
 
-// Storage functions
 export async function uploadFile(file: File, path: string): Promise<string | null> {
-  const supabase = getSupabaseClient()
-  const { data, error } = await supabase.storage.from("media").upload(path, file, {
-    cacheControl: "3600",
-    upsert: false,
+  const formData = new FormData()
+  formData.append("file", file)
+  formData.append("folder", path.split("/").slice(0, -1).join("/"))
+
+  const res = await fetch("/api/upload", {
+    method: "POST",
+    body: formData,
   })
 
-  if (error) {
-    console.error("Error uploading file:", error)
-    return null
+  if (!res.ok) {
+    const errorData = await res.json()
+    throw new Error(errorData?.error || "Upload failed")
   }
 
-  // Get public URL
-  const {
-    data: { publicUrl },
-  } = supabase.storage.from("media").getPublicUrl(data.path)
-
-  return publicUrl
+  const data = await res.json()
+  return data.url || null
 }
+
 
 export async function deleteFile(path: string): Promise<boolean> {
   const supabase = getSupabaseClient()

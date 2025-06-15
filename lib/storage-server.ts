@@ -1,7 +1,7 @@
-import { getSupabaseClientComponent } from "./supabase"
+import { getSupabaseClient } from "./supabase"
 
-export async function uploadFileClient(file: File | Blob, bucket = "assets", path?: string) {
-  const supabase = getSupabaseClientComponent()
+export async function uploadFileServer(file: File | Blob, bucket = "assets", path?: string) {
+  const supabase = getSupabaseClient()
 
   if (!path) {
     const ext = file instanceof File ? file.name.split(".").pop() : "blob"
