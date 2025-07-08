@@ -17,7 +17,7 @@ async function getBlogBySlug(slug: string): Promise<Blog | null> {
 
   try {
     const res = await fetch(
-      `${baseUrl}/api/news?project=Dubai%20Metro%20Rails&type=Article`,
+      `${baseUrl}/api/news?project=Harshit%20Dabhi&type=Article`,
       { next: { revalidate: 3600 } }
     );
     const blogs: Blog[] = await res.json();
@@ -29,7 +29,7 @@ async function getBlogBySlug(slug: string): Promise<Blog | null> {
   }
 }
 
-export default async function BlogPost(props: { params: { slug: string } }) {
+export default async function BlogPost(props: { params: { slug: string } }) { 
   const { slug } = await props.params; // 👈 Fix here
   const post = await getBlogBySlug(slug);
 
