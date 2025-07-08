@@ -12,7 +12,7 @@ const client = new DynamoDBClient({
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
   },
 });
-
+ 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);

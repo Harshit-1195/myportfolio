@@ -29,12 +29,9 @@ async function getBlogBySlug(slug: string): Promise<Blog | null> {
   }
 }
 
-export default async function BlogPost({
-  params,
-}: {
-  params: { slug: string };
-}) {
-  const post = await getBlogBySlug(params.slug);
+export default async function BlogPost(props: { params: { slug: string } }) {
+  const { slug } = await props.params; // 👈 Fix here
+  const post = await getBlogBySlug(slug);
 
   if (!post) return notFound();
 
@@ -51,10 +48,7 @@ export default async function BlogPost({
       <PageParticles />
       <div className="container mx-auto py-28 px-4 max-w-4xl min-h-screen">
         <ScrollRevealWrapper>
-          <Link
-            href="/blog"
-            className="text-white hover:text-white/80 flex items-center gap-2 mb-6"
-          >
+          <Link href="/blog" className="text-white hover:text-white/80 flex items-center gap-2 mb-6">
             <ArrowLeft size={16} />
             Back to Blog
           </Link>
@@ -69,9 +63,7 @@ export default async function BlogPost({
                 </div>
               )}
 
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                {post.title}
-              </h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">{post.title}</h1>
 
               <div className="flex items-center text-sm text-white/70 mb-6">
                 <Calendar className="h-4 w-4 mr-1" />

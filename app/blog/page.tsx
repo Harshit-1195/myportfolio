@@ -14,7 +14,7 @@ async function getBlogs(): Promise<Blog[]> {
 
   try {
     const res = await fetch(
-      `${baseUrl}/api/news?project=Dubai%20Metro%20Rails&type=Article`,
+      `${baseUrl}/api/news?project=Harshit%20Dabhi&type=Article`,
       { next: { revalidate: 3600 } }
     );
     const blogs = await res.json();
