@@ -1,64 +1,47 @@
-import { notFound } from "next/navigation"
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
-import { cookies } from "next/headers"
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowLeft, Calendar, User, Share2 } from "lucide-react"
-import { ScrollRevealWrapper } from "@/components/scroll-reveal-wrapper"
-import PageParticles from "@/components/page-particles"
-import { Markdown } from "@/components/markdown"
+import { notFound } from "next/navigation";
+import { Blog } from "@/lib/types/common";
+import { headers as getHeaders } from "next/headers";
+import Link from "next/link";
+import Image from "next/image";
+import { Calendar, User, Share2, ArrowLeft } from "lucide-react";
+import { ScrollRevealWrapper } from "@/components/scroll-reveal-wrapper";
+import PageParticles from "@/components/page-particles";
 
-export const revalidate = 3600 // Revalidate every hour
+export const revalidate = 3600; // Revalidate every hour (ISR)
 
-// This function generates static params for all blog posts
-export async function generateStaticParams() {
-  const supabase = createServerComponentClient({ cookies })
-  const { data: posts } = await supabase.from("blog_posts").select("slug").eq("is_published", true)
+async function getBlogBySlug(slug: string): Promise<Blog | null> {
+  const headers = await getHeaders();
+  const host = headers.get("host");
+  const protocol = host?.includes("localhost") ? "http" : "https";
+  const baseUrl = `${protocol}://${host}`;
 
-  return (
-    posts?.map((post) => ({
-      slug: post.slug,
-    })) || []
-  )
-}
-
-async function getBlogPost(slug: string) {
-  const supabase = createServerComponentClient({ cookies })
-
-  // Increment view count
-  await supabase.rpc("increment_blog_post_views", { post_slug: slug })
-
-  // Get the post
-  const { data } = await supabase.from("blog_posts").select("*").eq("slug", slug).eq("is_published", true).single()
-
-  if (!data) {
-    notFound()
+  try {
+    const res = await fetch(
+      `${baseUrl}/api/news?project=Harshit%20Dabhi&type=Article`,
+      { next: { revalidate: 3600 } }
+    );
+    const blogs: Blog[] = await res.json();
+    const match = blogs.find((b) => b.slug === slug);
+    return match || null;
+  } catch (err) {
+    console.error("❌ Failed to fetch blog:", err);
+    return null;
   }
-
-  return data
 }
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
-  const post = await getBlogPost(params.slug)
+export default async function BlogPost(props: { params: { slug: string } }) { 
+  const { slug } = await props.params; // 👈 Fix here
+  const post = await getBlogBySlug(slug);
 
-  // Use SEO fields if available, otherwise fall back to regular content
-  const seoTitle = post.seo_title || post.title
-  const seoDescription = post.seo_description || post.excerpt
-  const canonicalUrl = post.canonical_url || `${process.env.NEXT_PUBLIC_BASE_URL}/blog/${post.slug}`
-  const ogImage = post.og_image || post.featured_image
+  if (!post) return notFound();
 
-  // Format dates for display
-  const publishedDate = post.published_at
-    ? new Date(post.published_at).toLocaleDateString("en-US", {
+  const publishedDate = post.createdAt
+    ? new Date(post.createdAt).toLocaleDateString("en-US", {
         year: "numeric",
         month: "long",
         day: "numeric",
       })
-    : new Date(post.created_at).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
+    : "";
 
   return (
     <>
@@ -72,17 +55,13 @@ export default async function BlogPost({ params }: { params: { slug: string } })
 
           <article className="glass-panel p-8 rounded-lg mb-10 hover-glow">
             <div className="mb-6">
-              <div className="flex flex-wrap gap-2 mb-4">
-                {post.category && (
-                  <span className="px-3 py-1 rounded-full text-xs bg-white/10 text-white">{post.category}</span>
-                )}
-                {post.tags &&
-                  post.tags.map((tag: string, index: number) => (
-                    <span key={index} className="px-3 py-1 rounded-full text-xs bg-white/5 text-white/80">
-                      {tag}
-                    </span>
-                  ))}
-              </div>
+              {post.category && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <span className="px-3 py-1 rounded-full text-xs bg-white/10 text-white">
+                    {post.category}
+                  </span>
+                </div>
+              )}
 
               <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">{post.title}</h1>
 
@@ -91,15 +70,15 @@ export default async function BlogPost({ params }: { params: { slug: string } })
                 <span>{publishedDate}</span>
                 <span className="mx-2">•</span>
                 <User className="h-4 w-4 mr-1" />
-                <span>{post.author}</span>
+                <span>{post.by}</span>
               </div>
             </div>
 
-            {post.featured_image && (
+            {post.heroImage && (
               <div className="relative h-[300px] md:h-[400px] w-full mb-8 rounded-lg overflow-hidden">
                 <Image
-                  src={post.featured_image || "/placeholder.svg"}
-                  alt={post.title}
+                  src={post.heroImage}
+                  alt={post.title || "Blog post"}
                   fill
                   className="object-cover"
                   priority
@@ -107,15 +86,16 @@ export default async function BlogPost({ params }: { params: { slug: string } })
               </div>
             )}
 
-            <div className="prose prose-invert max-w-none">
-              <Markdown content={post.content} />
-            </div>
+            <div
+              className="prose prose-invert max-w-none text-white"
+              dangerouslySetInnerHTML={{ __html: post.content || "" }}
+            />
 
             <div className="mt-10 pt-6 border-t border-white/10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <User className="h-5 w-5" />
-                  <span className="text-white font-medium">{post.author}</span>
+                  <span className="text-white font-medium">{post.by}</span>
                 </div>
                 <button className="flex items-center gap-2 text-white/80 hover:text-white">
                   <Share2 className="h-5 w-5" />
@@ -127,5 +107,5 @@ export default async function BlogPost({ params }: { params: { slug: string } })
         </ScrollRevealWrapper>
       </div>
     </>
-  )
+  );
 }

@@ -1,66 +1,44 @@
-import { createServerComponentClient } from "@supabase/auth-helpers-nextjs"
-import { cookies } from "next/headers"
-import { BlogPostCard } from "@/components/blog-post-card"
-import PageParticles from "@/components/page-particles"
-import { ScrollRevealWrapper } from "@/components/scroll-reveal-wrapper"
+import { Blog } from "@/lib/types/common";
+import PageParticles from "@/components/page-particles";
+import { ScrollRevealWrapper } from "@/components/scroll-reveal-wrapper";
+import { BlogPostCard } from "@/components/blog-post-card";
+import { headers as getHeaders } from "next/headers";
 
-export const revalidate = 3600 // Revalidate every hour
+export const revalidate = 3600;
 
-async function getBlogPosts() {
-  const supabase = createServerComponentClient({ cookies })
+async function getBlogs(): Promise<Blog[]> {
+  const headers = await getHeaders(); // ✅ FIXED
+  const host = headers.get("host");
+  const protocol = host?.includes("localhost") ? "http" : "https";
+  const baseUrl = `${protocol}://${host}`;
 
   try {
-    // First, let's check what columns exist in the table
-    const { data: tableInfo, error: tableError } = await supabase.from("blog_posts").select("*").limit(1)
-
-    if (tableError) {
-      console.error("Error checking blog_posts table:", tableError)
-      return []
-    }
-
-    // Check if is_published column exists
-    const hasIsPublished = tableInfo && tableInfo.length > 0 && "is_published" in tableInfo[0]
-
-    let query = supabase.from("blog_posts").select("*")
-
-    // Only filter by is_published if the column exists
-    if (hasIsPublished) {
-      query = query.eq("is_published", true)
-    }
-
-    // Order by published_at if it exists, otherwise by created_at
-    const hasPublishedAt = tableInfo && tableInfo.length > 0 && "published_at" in tableInfo[0]
-    if (hasPublishedAt) {
-      query = query.order("published_at", { ascending: false })
-    } else {
-      query = query.order("created_at", { ascending: false })
-    }
-
-    const { data, error } = await query
-
-    if (error) {
-      console.error("Error fetching blog posts:", error)
-      return []
-    }
-
-    return data || []
-  } catch (error) {
-    console.error("Unexpected error fetching blog posts:", error)
-    return []
+    const res = await fetch(
+      `${baseUrl}/api/news?project=Harshit%20Dabhi&type=Article`,
+      { next: { revalidate: 3600 } }
+    );
+    const blogs = await res.json();
+    return Array.isArray(blogs) ? blogs : [];
+  } catch (err) {
+    console.error("❌ Failed to fetch blogs:", err);
+    return [];
   }
 }
 
 export default async function BlogPage() {
-  const posts = await getBlogPosts()
+  const posts = await getBlogs();
 
   return (
     <>
       <PageParticles />
       <div className="container mx-auto py-28 px-4 max-w-6xl">
         <ScrollRevealWrapper>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 text-center">Blog</h1>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 text-center">
+            Blog
+          </h1>
           <p className="text-xl text-white/70 mb-12 text-center max-w-3xl mx-auto">
-            Insights, thoughts, and expertise on digital marketing, programmatic advertising, and media buying.
+            Insights, thoughts, and expertise on digital marketing, programmatic
+            advertising, and media buying.
           </p>
 
           {posts.length === 0 ? (
@@ -70,15 +48,30 @@ export default async function BlogPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post) => (
-                <ScrollRevealWrapper key={post.id} delay={0.1}>
-                  <BlogPostCard post={post} />
-                </ScrollRevealWrapper>
-              ))}
+              {posts.map((post) => {
+                const cardData = {
+                  id: post.id || "",
+                  title: post.title || "Untitled",
+                  slug: post.slug || "",
+                  excerpt: post.metaDescription || "",
+                  featured_image: post.heroImage || null,
+                  author: post.by || "Unknown",
+                  category: post.category || "Uncategorized",
+                  tags: [],
+                  published_at: post.createdAt || null,
+                  created_at: post.createdAt || "",
+                };
+
+                return (
+                  <ScrollRevealWrapper key={cardData.id}>
+                    <BlogPostCard post={cardData} />
+                  </ScrollRevealWrapper>
+                );
+              })}
             </div>
           )}
         </ScrollRevealWrapper>
       </div>
     </>
-  )
+  );
 }

@@ -15,7 +15,7 @@ interface BlogPostCardProps {
     published_at: string | null
     created_at: string
   }
-}
+} 
 
 export function BlogPostCard({ post }: BlogPostCardProps) {
   const formatDate = (dateString: string | null) => {
