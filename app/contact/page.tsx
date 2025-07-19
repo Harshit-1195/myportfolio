@@ -5,22 +5,32 @@ import { MapPin, Linkedin, Calendar, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { BackToHomeAlt } from "@/components/back-to-home-alt";
+import emailjs from "emailjs-com";
 
 export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // mimic sending delay
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      await emailjs.sendForm(
+        "service_jpk4a0n", 
+        "template_pas1i84",
+        formRef.current!,
+        "oBtsBhFsJoL-9rIkB"
+      );
       setFormSubmitted(true);
-    }, 1200);
+    } catch (error) {
+      console.error("❌ EmailJS Error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   const contactInfo = [
@@ -108,7 +118,7 @@ export default function ContactPage() {
                 </Button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="firstName" className="block text-sm font-medium text-white/70 mb-1">
@@ -148,9 +158,6 @@ export default function ContactPage() {
             )}
           </div>
         </motion.div>
-
-        {/* right column remains the same, so keep your current Connect With Me + FAQs untouched */}
-        {/* only change was removing async form and making it static */}
       </div>
 
       <BackToHomeAlt />
