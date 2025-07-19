@@ -12,6 +12,7 @@ export default function AboutSection() {
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
+    
   })
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100])
