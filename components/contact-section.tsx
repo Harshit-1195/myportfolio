@@ -1,28 +1,12 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { MapPin, Calendar } from "lucide-react"
-import { submitContactForm } from "@/lib/actions"
-import { motion } from "framer-motion"
-import AnimatedText from "@/components/animated-text"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { MapPin, Calendar } from "lucide-react";
+import { motion } from "framer-motion";
+import AnimatedText from "@/components/animated-text";
 
 export default function ContactSection() {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [formSubmitted, setFormSubmitted] = useState(false)
-
-  async function handleSubmit(formData: FormData) {
-    setIsSubmitting(true)
-    try {
-      await submitContactForm(formData)
-      setFormSubmitted(true)
-    } catch (error) {
-      console.error("Error submitting form:", error)
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
-
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -32,37 +16,31 @@ export default function ContactSection() {
         delayChildren: 0.3,
       },
     },
-  }
+  };
 
   const item = {
     hidden: { opacity: 0, y: 20 },
     show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-  }
+  };
 
   return (
     <section className="py-20 px-4 md:px-10 relative overflow-hidden">
       {/* Animated background elements */}
       <motion.div
         className="absolute top-20 right-20 w-64 h-64 rounded-full bg-black/5 -z-10"
-        animate={{
-          x: [0, 20, 0],
-          y: [0, 30, 0],
-        }}
+        animate={{ x: [0, 20, 0], y: [0, 30, 0] }}
         transition={{
           duration: 10,
-          repeat: Number.POSITIVE_INFINITY,
+          repeat: Infinity,
           repeatType: "reverse",
         }}
       />
       <motion.div
         className="absolute bottom-20 left-20 w-40 h-40 rounded-full bg-black/5 -z-10"
-        animate={{
-          x: [0, -20, 0],
-          y: [0, -30, 0],
-        }}
+        animate={{ x: [0, -20, 0], y: [0, -30, 0] }}
         transition={{
           duration: 8,
-          repeat: Number.POSITIVE_INFINITY,
+          repeat: Infinity,
           repeatType: "reverse",
         }}
       />
@@ -89,6 +67,7 @@ export default function ContactSection() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-12">
+          {/* Contact Info */}
           <motion.div
             className="bg-gray-50 p-8 rounded-lg"
             initial={{ opacity: 0, x: -50 }}
@@ -157,6 +136,7 @@ export default function ContactSection() {
             </motion.div>
           </motion.div>
 
+          {/* Call-to-Actions */}
           <motion.div
             className="bg-white p-8 rounded-lg shadow-sm"
             initial={{ opacity: 0, x: 50 }}
@@ -196,5 +176,5 @@ export default function ContactSection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

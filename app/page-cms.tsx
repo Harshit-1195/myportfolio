@@ -6,18 +6,18 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, ArrowDown } from "lucide-react"
 import SectionTransition from "@/components/section-transition"
-import AnimatedHeading from "@/components/animated-heading"
+import AnimatedHeading from "@/components/animated-heading" 
 import { Button } from "@/components/ui/button"
 import { Calendar, Mail, Phone } from "lucide-react"
 import { throttle } from "@/lib/utils"
 import { OrganizationJsonLd } from "@/components/json-ld"
-import {
-  getHeroContent,
-  getStatsContent,
-  getAboutContent,
-  getExpertiseContent,
-  getContactCTAContent,
-} from "@/lib/content-service"
+// import {
+//   getHeroContent,
+//   getStatsContent,
+//   getAboutContent,
+//   getExpertiseContent,
+//   getContactCTAContent,
+// } from "@/lib/content-service"
 
 type Certificate = {
   name: string
@@ -48,31 +48,31 @@ export default function CMSHomePage() {
   const [loading, setLoading] = useState(true)
 
   // Load CMS content
-  useEffect(() => {
-    const loadContent = async () => {
-      try {
-        const [hero, stats, about, expertise, contactCTA] = await Promise.all([
-          getHeroContent(),
-          getStatsContent(),
-          getAboutContent(),
-          getExpertiseContent(),
-          getContactCTAContent(),
-        ])
+  // useEffect(() => {
+  //   const loadContent = async () => {
+  //     try {
+  //       const [hero, stats, about, expertise, contactCTA] = await Promise.all([
+  //         getHeroContent(),
+  //         getStatsContent(),
+  //         getAboutContent(),
+  //         getExpertiseContent(),
+  //         getContactCTAContent(),
+  //       ])
 
-        setHeroContent(hero?.content)
-        setStatsContent(stats?.content)
-        setAboutContent(about?.content)
-        setExpertiseContent(expertise?.content)
-        setContactCTAContent(contactCTA?.content)
-      } catch (error) {
-        console.error("Error loading CMS content:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
+  //       setHeroContent(hero?.content)
+  //       setStatsContent(stats?.content)
+  //       setAboutContent(about?.content)
+  //       setExpertiseContent(expertise?.content)
+  //       setContactCTAContent(contactCTA?.content)
+  //     } catch (error) {
+  //       console.error("Error loading CMS content:", error)
+  //     } finally {
+  //       setLoading(false)
+  //     }
+  //   }
 
-    loadContent()
-  }, [])
+  //   loadContent()
+  // }, [])
 
   // Track scroll position for parallax effects with throttling
   useEffect(() => {

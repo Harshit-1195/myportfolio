@@ -1,3 +1,5 @@
+// app/api/news/route.ts
+
 import { NextResponse } from "next/server";
 import {
   DynamoDBClient,
@@ -17,7 +19,7 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const project = searchParams.get("project");
-    const type = searchParams.get("type") || "Article";
+    const type = searchParams.get("type") || "Case Study"; 
 
     if (!project) {
       console.warn("🚫 Missing project param");

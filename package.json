@@ -1,5 +1,5 @@
 {
-  "name": "my-v0-project",
+  "name": "harshit-dabhi",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,11 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "latest",
-    "@aws-sdk/client-s3": "latest",
-    "@aws-sdk/lib-dynamodb": "latest",
-    "@aws-sdk/lib-storage": "latest",
-    "@aws-sdk/s3-request-presigner": "latest",
+    "@aws-sdk/client-dynamodb": "^3.848.0",
+    "@aws-sdk/util-dynamodb": "^3.848.0",
     "@emotion/is-prop-valid": "latest",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-accordion": "1.2.2",
@@ -43,8 +40,6 @@
     "@radix-ui/react-toggle": "1.1.1",
     "@radix-ui/react-toggle-group": "1.1.1",
     "@radix-ui/react-tooltip": "1.1.6",
-    "@supabase/auth-helpers-nextjs": "latest",
-    "@supabase/supabase-js": "latest",
     "@tailwindcss/typography": "^0.5.16",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
@@ -60,7 +55,6 @@
     "next-themes": "latest",
     "pptxgenjs": "latest",
     "react": "^19",
-    "react-day-picker": "8.10.1",
     "react-dom": "^19",
     "react-dropzone": "latest",
     "react-hook-form": "^7.54.1",
@@ -74,7 +68,6 @@
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
     "uuid": "latest",
-    "vaul": "^0.9.6",
     "zod": "^3.24.1"
   },
   "devDependencies": {
