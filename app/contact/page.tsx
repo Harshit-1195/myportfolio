@@ -20,10 +20,10 @@ export default function ContactPage() {
 
     try {
       await emailjs.sendForm(
-        "service_jpk4a0n", 
-        "template_pas1i84",
+        "service_qf61bo6", 
+        "template_vdlmy3d",
         formRef.current!,
-        "oBtsBhFsJoL-9rIkB"
+        "pTc_6eqcJJzfssf1c"
       );
       setFormSubmitted(true);
     } catch (error) {
