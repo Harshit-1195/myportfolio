@@ -4,7 +4,6 @@ import { headers as getHeaders } from "next/headers";
 import Link from "next/link";
 import Image from "next/image";
 import { Calendar, User, Share2, ArrowLeft } from "lucide-react";
-import { ScrollRevealWrapper } from "@/components/scroll-reveal-wrapper";
 import PageParticles from "@/components/page-particles";
 
 export const revalidate = 3600;
@@ -45,15 +44,15 @@ export default async function BlogPost(props: { params: { slug: string } }) {
 
   return (
     <>
-      <PageParticles />
+      <PageParticles /> 
       <div className="container mx-auto py-28 px-4 max-w-4xl min-h-screen">
-        <ScrollRevealWrapper>
+        {/* <ScrollRevealWrapper> */}
           <Link href="/blog" className="text-white hover:text-white/80 flex items-center gap-2 mb-6">
             <ArrowLeft size={16} />
             Back to Blog
           </Link>
 
-          <article className="glass-panel p-8 rounded-lg mb-10 hover-glow">
+          <article className="glass-panel p-8 rounded-lg mb-10 hover-glow z-10">
             <div className="mb-6">
               {post.category && (
                 <div className="flex flex-wrap gap-2 mb-4">
@@ -104,7 +103,7 @@ export default async function BlogPost(props: { params: { slug: string } }) {
               </div>
             </div>
           </article>
-        </ScrollRevealWrapper>
+        {/* </ScrollRevealWrapper> */}
       </div>
     </>
   );
