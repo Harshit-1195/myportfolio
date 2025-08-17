@@ -18,10 +18,8 @@ function asDate(value?: string): Date {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrlRaw =
-    process.env.NEXT_PUBLIC_BASE_URL ||
-    "https://www.harshitdabhi.com"
-  const baseUrl = ensureNoTrailingSlash(baseUrlRaw)
+  // 🔒 Hardcoded base URL
+  const baseUrl = ensureNoTrailingSlash("https://www.harshitdabhi.com/")
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -60,12 +58,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "monthly",
       priority: 0.8,
     },
-    {
-      url: `${baseUrl}/work`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
     // New listing pages
     {
       url: `${baseUrl}/case-studies`,
@@ -92,7 +84,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       const items = (await res.json()) as NewsItem[]
       return items || []
     } catch {
-      // If API hiccups, fail gracefully with empty list
       return [] as NewsItem[]
     }
   }
