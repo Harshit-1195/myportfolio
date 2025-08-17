@@ -16,7 +16,7 @@ export async function GET() {
     const data = await res.json();
     return NextResponse.json(data);
   } catch (err) {
-    console.error("Failed to fetch articles:", err);
+    console.error("Failed to fetch case studies:", err);
     return NextResponse.json([], { status: 500 });
   }
 }

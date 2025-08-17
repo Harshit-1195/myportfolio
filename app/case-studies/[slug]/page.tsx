@@ -1,3 +1,5 @@
+// app/case-studies/[slug]/page.tsx
+
 import { notFound } from "next/navigation";
 import { Blog } from "@/lib/types/common";
 import { headers as getHeaders } from "next/headers";
@@ -30,7 +32,7 @@ async function getBlogBySlug(slug: string): Promise<Blog | null> {
 }
 
 export default async function BlogPost(props: { params: { slug: string } }) { 
-  const { slug } = await props.params; // 👈 Fix here
+  const { slug } = await props.params;
   const post = await getBlogBySlug(slug);
 
   if (!post) return notFound();
@@ -91,7 +93,7 @@ export default async function BlogPost(props: { params: { slug: string } }) {
               dangerouslySetInnerHTML={{ __html: post.content || "" }}
             />
 
-            <div className="mt-10 pt-6 border-t border-white/10">
+            <div className="mt-10 pt-6 border-t border-white/10"> 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <User className="h-5 w-5" />

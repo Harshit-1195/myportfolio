@@ -1,3 +1,5 @@
+// app/blog/page.tsx
+
 import { Blog } from "@/lib/types/common";
 import PageParticles from "@/components/page-particles";
 import { ScrollRevealWrapper } from "@/components/scroll-reveal-wrapper";

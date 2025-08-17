@@ -7,7 +7,7 @@ import { Calendar, User, Share2, ArrowLeft } from "lucide-react";
 import { ScrollRevealWrapper } from "@/components/scroll-reveal-wrapper";
 import PageParticles from "@/components/page-particles";
 
-export const revalidate = 3600; // Revalidate every hour (ISR)
+export const revalidate = 3600;
 
 async function getBlogBySlug(slug: string): Promise<Blog | null> {
   const headers = await getHeaders();
